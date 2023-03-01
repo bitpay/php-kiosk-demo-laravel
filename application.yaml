@@ -1,0 +1,47 @@
+bitpay:
+  facade: pos
+  token:
+  notificationEmail:
+  environment: 'test'
+  design:
+    hero:
+      bgColor: "#100000"
+      title: "BitPay Demo ts"
+      body: "Mattis amet hendrerit dolor, quisque lorem pharetra. Pellentesque lacus nisi urna, arcu sociis eu. Orci vel lectus nisl eget eget ut consectetur. Sit justo viverra non adipisicing elit distinctio."
+    logo: "https://via.placeholder.com/300x75?text=LOGO"
+    posData:
+      fields:
+        - type: "select"
+          required: true
+          id: "store"
+          name: "store"
+          label: "Store"
+          options:
+            - id: "store-1"
+              label: "Store 1"
+              value: "store-1"
+            - id: "store-2"
+              label: "Store 2"
+              value: "store-2"
+        - type: "fieldset"
+          required: true
+          name: "register"
+          label: "Register #"
+          options:
+            - id: "register-1"
+              label: "1"
+              value: "1"
+            - id: "register-2"
+              label: "2"
+              value: "2"
+        - type: "text"
+          required: true
+          id: "reg_transaction_no"
+          name: "reg_transaction_no"
+          label: "Reg/Transaction #"
+        - type: "price"
+          required: true
+          id: "price"
+          name: "price"
+          currency: "USD"
+          label: ''
