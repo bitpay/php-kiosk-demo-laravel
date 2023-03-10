@@ -69,6 +69,4 @@ class BitPayConfiguration implements BitPayConfigurationInterface
 
         return 'USD';
     }
-
-
 }

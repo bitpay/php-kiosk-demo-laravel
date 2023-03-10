@@ -89,7 +89,7 @@
                             </div>
                             <input type="number"  id="{{ $field->getId() }}" name="{{ $field->getName() }}" required="{{ $field->isRequired() }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" attr="aria-describedby={{ $field->getId() }}-currency" />
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500 sm:text-sm" id="{{ $field->getId() }}-currency"> USD </span>
+                                <span class="text-gray-500 sm:text-sm" id="{{ $field->getId() }}-currency"> {{ $field->getCurrency() }} </span>
                             </div>
                         </div>
                     @break

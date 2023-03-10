@@ -7,6 +7,8 @@ namespace App\Configuration;
 class Hero
 {
     private string $bgColor;
+    private string $title;
+    private string $body;
 
     /**
      * Hero constructor.
@@ -68,6 +70,4 @@ class Hero
     {
         $this->body = $body;
     }
-    private string $title;
-    private string $body;
 }
