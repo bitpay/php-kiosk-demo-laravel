@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Invoice\CreateInvoiceController;
 use App\Http\Controllers\Invoice\GetInvoiceFormController;
+use App\Http\Controllers\Invoice\GetInvoicesController;
 use App\Http\Controllers\Invoice\GetInvoiceViewController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [GetInvoiceFormController::class, 'execute'])->name('invoiceForm');
+Route::get('/invoices', [GetInvoicesController::class, 'execute'])->name('getInvoices');
 Route::post('/invoices', [CreateInvoiceController::class, 'execute'])->name('createInvoice');
 Route::get('/invoices/{id}', [GetInvoiceViewController::class, 'execute'])->name('invoiceView');
