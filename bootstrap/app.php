@@ -11,6 +11,12 @@
 |
 */
 
+use App\Configuration\BitPayConfigurationFactoryInterface;
+use App\Configuration\BitPayConfigurationInterface;
+use App\Repository\EloquentInvoiceRepository;
+use App\Repository\InvoiceRepositoryInterface;
+use Illuminate\Contracts\Foundation\Application;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -39,6 +45,20 @@ $app->singleton(
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
+);
+
+$app->singleton(
+    InvoiceRepositoryInterface::class,
+    EloquentInvoiceRepository::class
+);
+
+$app->singleton(
+    BitPayConfigurationInterface::class, static function (Application $application) {
+        /** @var BitPayConfigurationFactoryInterface $factory */
+        $factory = $application->make(BitPayConfigurationFactoryInterface::class);
+
+        return $factory->create();
+    }
 );
 
 /*
