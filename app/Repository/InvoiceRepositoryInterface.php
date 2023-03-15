@@ -14,4 +14,6 @@ interface InvoiceRepositoryInterface
     public function findOne(int $id): ?Invoice;
 
     public function findPaginated(int $pageNumber, int $perPage = self::PER_PAG): LengthAwarePaginator;
+
+    public function findOneByUuid(string $uuid): ?Invoice;
 }

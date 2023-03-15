@@ -30,7 +30,7 @@
                                         <div class="px-4 py-5 sm:px-6">
                                             <h3 class="text-lg font-medium leading-6 text-gray-900">General Information</h3>
                                         </div>
-                                        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                                        <div class="border-t border-gray-200 px-4 py-5 sm:p-0" data-uuid="{{ $invoice->uuid }}">
                                             <dl class="sm:divide-y sm:divide-gray-200">
                                                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
                                                     <dt class="text-sm font-medium text-gray-500">ID</dt>
@@ -66,4 +66,7 @@
             </div>
         </main>
     </div>
+
+    <script type="text/javascript" src="{{ URL::asset ('js/invoices/updateInvoiceFromDetailView.js') }}"></script>
+    <script type="text/javascript">new UpdateStatusSse('{{$sseUrl}}', '{{$sseTopic}}').execute()</script>
 @stop

@@ -41,13 +41,12 @@
 
                                         <tbody class="divide-y divide-gray-200">
                                             @foreach($invoices as $invoice)
-                                                <tr onclick="window.location.href = '/invoices/{{ $invoice->id }}'" class="cursor-pointer">
+                                                <tr onclick="window.location.href = '/invoices/{{ $invoice->id }}'" class="cursor-pointer" data-uuid="{{ $invoice->uuid }}">
                                                     <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ $invoice->bitpay_id }}</td>
                                                     <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">${{ number_format($invoice->price, 2) }}</td>
                                                     <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">{{ $invoice->item_description }}</td>
                                                     <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500 status">
-                                                        <span class="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium capitalize grid-status-{{ $invoice->status }}"
-                                                              attr="data-id={{ $invoice->id }}">{{ $invoice->status }}</span>
+                                                        <span class="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium capitalize grid-status-{{ $invoice->status }}">{{ $invoice->status }}</span>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -64,4 +63,7 @@
             </div>
         </main>
     </div>
+
+    <script type="text/javascript" src="{{ URL::asset ('js/invoices/updateInvoiceFromGridView.js') }}"></script>
+    <script type="text/javascript">new UpdateStatusSse('{{$sseUrl}}', '{{$sseTopic}}').execute()</script>
 @stop
