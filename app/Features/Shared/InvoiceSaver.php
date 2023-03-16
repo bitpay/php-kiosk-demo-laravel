@@ -108,7 +108,7 @@ class InvoiceSaver
         ]);
 
         $bitpayRefundInfo = $bitpayInvoice->getRefundInfo();
-        if (!$bitpayRefundInfo) {
+        if (!$bitpayRefundInfo || $bitpayRefundInfo->getCurrency() === null) {
             $invoiceRefund->save();
 
             return $invoiceRefund;
