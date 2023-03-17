@@ -7,7 +7,7 @@ namespace App\Features\Invoice\UpdateInvoice;
 use App\Features\Shared\DateTimeImmutableCreator;
 use App\Features\Shared\StringConverter;
 
-class BitPayUpdateMapper
+final class BitPayUpdateMapper
 {
     private StringConverter $stringConverter;
 

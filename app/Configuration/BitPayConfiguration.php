@@ -69,4 +69,9 @@ class BitPayConfiguration implements BitPayConfigurationInterface
 
         return 'USD';
     }
+
+    public function isSignRequest(): bool
+    {
+        return $this->getFacade() !== 'pos';
+    }
 }

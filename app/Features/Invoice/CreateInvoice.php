@@ -7,10 +7,12 @@ namespace App\Features\Invoice;
 use App\Configuration\BitPayConfigurationFactoryInterface;
 use App\Configuration\BitPayConfigurationInterface;
 use App\Features\Shared\InvoiceSaver;
+use App\Features\Shared\Logger;
 use App\Features\Shared\UrlProvider;
 use App\Features\Shared\UuidFactory;
 use App\Http\Services\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
+use BitpaySDK\Exceptions\BitPayException;
 use BitPaySDK\Model\Facade;
 use BitPaySDK\Model\Invoice\Invoice as BitPayInvoice;
 
@@ -21,19 +23,22 @@ class CreateInvoice
     private InvoiceSaver $invoiceSaver;
     private UuidFactory $uuidFactory;
     private UrlProvider $urlProvider;
+    private Logger $logger;
 
     public function __construct(
         BitPayConfigurationFactoryInterface $bitPayConfigurationFactory,
         BitPayClientFactory $bitPayClientFactory,
         InvoiceSaver $invoiceSaver,
         UuidFactory $uuidFactory,
-        UrlProvider $urlProvider
+        UrlProvider $urlProvider,
+        Logger $logger
     ) {
         $this->bitPayConfigurationFactory = $bitPayConfigurationFactory;
         $this->bitPayClientFactory = $bitPayClientFactory;
         $this->invoiceSaver = $invoiceSaver;
         $this->uuidFactory = $uuidFactory;
         $this->urlProvider = $urlProvider;
+        $this->logger = $logger;
     }
 
     /**
@@ -42,16 +47,28 @@ class CreateInvoice
      */
     public function execute(array $params): Invoice
     {
-        /** @var BitPayConfigurationInterface $bitPayConfiguration */
-        $bitPayConfiguration = $this->bitPayConfigurationFactory->create();
-        $validatedParams = $this->validateParams($bitPayConfiguration, $params);
-        $posDataJson = json_encode($validatedParams, JSON_THROW_ON_ERROR);
-        $uuid = $this->uuidFactory->create();
+        try {
+            /** @var BitPayConfigurationInterface $bitPayConfiguration */
+            $bitPayConfiguration = $this->bitPayConfigurationFactory->create();
+            $validatedParams = $this->validateParams($bitPayConfiguration, $params);
+            $posDataJson = json_encode($validatedParams, JSON_THROW_ON_ERROR);
+            $uuid = $this->uuidFactory->create();
+            $requestData = $this->createRequestData($validatedParams['price'], $bitPayConfiguration, $posDataJson, $uuid);
+            $bitpayInvoice = $this->createBitpayInvoice($bitPayConfiguration, $requestData);
 
-        $requestData = $this->createRequestData($validatedParams['price'], $bitPayConfiguration, $posDataJson, $uuid);
-        $bitpayInvoice = $this->createBitpayInvoice($bitPayConfiguration, $requestData);
+            $invoice = $this->invoiceSaver->fromSdkModel($bitpayInvoice, $uuid);
+            $this->logger->info('INVOICE_CREATE_SUCCESS', 'Successfully created invoice', [
+                'id' => $invoice->id
+            ]);
+        } catch (BitPayException|\JsonException $e) {
+            $this->logger->error('INVOICE_CREATE_FAIL', 'Failed to create invoice', [
+                "errorMessage" => $e->getMessage(),
+                "stackTrace" => $e->getTraceAsString()
+            ]);
+            throw new \RuntimeException($e->getMessage());
+        }
 
-        return $this->invoiceSaver->fromSdkModel($bitpayInvoice, $uuid);
+        return $invoice;
     }
 
     private function validateParams(BitPayConfigurationInterface $bitPayConfiguration, array $params): array
