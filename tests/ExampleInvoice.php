@@ -13,6 +13,9 @@ class ExampleInvoice
 {
     public const UUID = '04373e9d-d265-4a07-aea4-c8a67c253968';
     public const TOKEN = 'someToken';
+    public const BITPAY_ID = 'someBitpayId';
+    public const BITPAY_ORDER_ID = 'someBitpayOrderId';
+    public const ITEM_DESCRIPTION = 'someDecription';
 
     public static function create(): Invoice
     {
@@ -20,6 +23,12 @@ class ExampleInvoice
         $invoice->uuid = self::UUID;
         $invoice->price = 12.35;
         $invoice->token = self::TOKEN;
+        $invoice->bitpay_id = self::BITPAY_ID;
+        $invoice->bitpay_order_id = self::BITPAY_ORDER_ID;
+        $invoice->bitpay_url = 'someBitpayUrl';
+        $invoice->status = 'new';
+        $invoice->currency_code = 'USD';
+        $invoice->item_description = self::ITEM_DESCRIPTION;
 
         $invoiceBuyer = new InvoiceBuyer([
             'name' => 'SomeName',

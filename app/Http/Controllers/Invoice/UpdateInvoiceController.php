@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Invoice;
 
+use App\Exceptions\MissingInvoice;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoice;
 use App\Features\Shared\Logger;
 use App\Http\Controllers\Controller;
@@ -28,7 +29,13 @@ class UpdateInvoiceController extends Controller
         /** @var array $data */
         $data = $request->request->get('data');
         $data['uuid'] = $uuid;
-        $this->updateInvoice->usingBitPayUpdateResponse($uuid, $data);
+        try {
+            $this->updateInvoice->usingBitPayUpdateResponse($uuid, $data);
+        } catch (MissingInvoice $e) {
+            return response(null, Response::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            return response('Unable to process update', Response::HTTP_BAD_REQUEST);
+        }
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

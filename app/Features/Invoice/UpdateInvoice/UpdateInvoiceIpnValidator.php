@@ -28,9 +28,9 @@ final class UpdateInvoiceIpnValidator implements UpdateInvoiceValidator
                 throw new ValidationFailed('For IPN request, we need original BitPay model');
             }
 
-            $uuid = $data['uuid'] ?? null;
-            if (!$uuid) {
-                throw new ValidationFailed('Missing uuid');
+            $bitPayId = $data['id'] ?? null;
+            if (!$bitPayId || $bitPayId !== $bitPayInvoice->getId()) {
+                throw new ValidationFailed('Wrong order id');
             }
 
             $orderId = $data['orderId'] ?? null;
@@ -38,7 +38,7 @@ final class UpdateInvoiceIpnValidator implements UpdateInvoiceValidator
                 throw new ValidationFailed('Wrong order id');
             }
 
-            $this->logger->info('IPN_VALIDATE_SUCCESS', 'Successfully validated IP', ['uuid' => $uuid]);
+            $this->logger->info('IPN_VALIDATE_SUCCESS', 'Successfully validated IP', ['bitpay_id' => $bitPayId]);
         } catch (ValidationFailed $e) {
             $this->logger->info('IPN_VALIDATE_FAIL', 'Failed to validate IPN', [
                 'errorMessage' => $e->getMessage(),

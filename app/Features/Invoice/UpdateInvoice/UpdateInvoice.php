@@ -48,18 +48,18 @@ class UpdateInvoice
             throw new MissingInvoice('Missing invoice');
         }
 
-        $client = $this->bitPayClientFactory->create();
-        $bitPayInvoice = $client->getInvoice(
-            $invoice->bitpay_id,
-            $this->bitPayConfiguration->getFacade(),
-            $this->bitPayConfiguration->isSignRequest()
-        );
-
         try {
+            $client = $this->bitPayClientFactory->create();
+            $bitPayInvoice = $client->getInvoice(
+                $invoice->bitpay_id,
+                $this->bitPayConfiguration->getFacade(),
+                $this->bitPayConfiguration->isSignRequest()
+            );
+
             $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
             $this->updateInvoiceValidator->execute($data, $bitPayInvoice);
             $this->updateInvoice($invoice, $updateInvoiceData);
-        } catch (\Exception $e) {
+        } catch (\Exception|\TypeError $e) {
             $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
                 'id' => $invoice->id
             ]);
