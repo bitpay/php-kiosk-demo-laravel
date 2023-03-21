@@ -23,7 +23,8 @@ class InvoiceSaverTest extends TestCase
     public function it_should_save_bitpay_invoice_to_db(): void
     {
         $bitpayInvoice = (new ExampleSdkInvoice())->get();
-        $applicationInvoice = $this->getTestedClass()->fromSdkModel($bitpayInvoice);
+        $uuid = '1234';
+        $applicationInvoice = $this->getTestedClass()->fromSdkModel($bitpayInvoice, $uuid);
 
         /** @var InvoiceTransaction $transaction */
         $transaction = $applicationInvoice->invoiceTransactions()->getResults()[0];
@@ -33,6 +34,7 @@ class InvoiceSaverTest extends TestCase
         $invoiceRefund = $applicationInvoice->getInvoiceRefund();
         $refundInfo = $invoiceRefund->getInvoiceRefundInfo();
 
+        Assert::assertEquals($uuid, $applicationInvoice->uuid);
         Assert::assertEquals($bitpayInvoice->getCurrency(), $applicationInvoice->currency_code);
         Assert::assertEquals($bitpayInvoice->getGuid(), $applicationInvoice->bitpay_guid);
         Assert::assertEquals($bitpayInvoice->getToken(), $applicationInvoice->token);

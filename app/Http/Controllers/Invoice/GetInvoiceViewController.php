@@ -14,6 +14,7 @@ use App\Models\Invoice\Invoice;
 use App\Repository\InvoiceRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class GetInvoiceViewController extends Controller
 {
@@ -45,9 +46,7 @@ class GetInvoiceViewController extends Controller
         /** @var Invoice $invoice */
         $invoice = $this->invoiceRepository->findOne($id);
         if (!$invoice) {
-            return view('pages.invoice.missingInvoice', [
-                'configuration' => $this->bitPayConfiguration
-            ]);
+            abort(Response::HTTP_NOT_FOUND);
         }
 
         $this->logger->info('INVOICE_GET', 'Loaded invoice', ['id' => $id]);

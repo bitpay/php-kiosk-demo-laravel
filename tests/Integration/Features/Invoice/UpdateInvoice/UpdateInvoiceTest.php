@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Features\Invoice\UpdateInvoice;
 
-use App\Features\Invoice\UpdateInvoice\BitPayUpdateMapper;
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoice;
+use App\Http\Services\BitPayClientFactory;
 use App\Repository\InvoiceRepositoryInterface;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use BitPaySDK\Model\Facade;
+use BitPaySDK\Model\Invoice\Invoice;
+use BitPaySDK\PosClient;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Assert;
 use Tests\ExampleInvoice;
-use Tests\TestCase;
+use Tests\Integration\IntegrationTest;
 
-class UpdateInvoiceTest extends TestCase
+class UpdateInvoiceTest extends IntegrationTest
 {
-    use RefreshDatabase;
-
     /**
      * @test
      */
@@ -27,13 +28,29 @@ class UpdateInvoiceTest extends TestCase
 
         ExampleInvoice::createSaved();
 
+        $this->mock(BitPayClientFactory::class, function (MockInterface $mock) {
+            $mock->shouldReceive('create')->andReturn(new class('', '') extends PosClient {
+                public function getInvoice(string $invoiceId, string $facade = Facade::Merchant, bool $signRequest = true): Invoice
+                {
+                    $invoice = new Invoice();
+                    $invoice->setId(ExampleInvoice::BITPAY_ID);
+                    $invoice->setOrderId(ExampleInvoice::BITPAY_ORDER_ID);
+
+                    return $invoice;
+                }
+            });
+        });
+        $this->mock(SendUpdateInvoiceNotification::class, function (MockInterface $mock) {
+            $mock->shouldReceive('execute')->times(1);
+        });
+
         $testedClass = $this->getTestedClass();
         $testedClass->usingBitPayUpdateResponse(ExampleInvoice::UUID, $data);
 
         $invoice = $this->app->make(InvoiceRepositoryInterface::class)->findOne(1);
 
         Assert::assertEquals(ExampleInvoice::TOKEN, $invoice->token);
-        Assert::assertEquals('MV9fy5iNDkqrg4qrfYpw75', $invoice->bitpay_id);
+        Assert::assertEquals('someBitpayId', $invoice->bitpay_id);
         Assert::assertEquals('https://test.bitpay.com/invoice?id=MV9fy5iNDkqrg4qrfYpw75', $invoice->bitpay_url);
         Assert::assertEquals("{\"store\":\"store-1\",\"register\":\"2\",\"reg_transaction_no\":\"87678\",\"price\":\"76.70\"}", $invoice->pos_data_json);
         Assert::assertEquals('expired', $invoice->status);
@@ -48,15 +65,11 @@ class UpdateInvoiceTest extends TestCase
         Assert::assertEquals(347100, $btc->total);
         Assert::assertEquals(342800, $btc->subtotal);
         Assert::assertEquals(0, $invoice->getInvoicePayment()->amount_paid);
-        Assert::assertEquals('640f27154e58f8.40716035', $invoice->bitpay_order_id);
+        Assert::assertEquals('someBitpayOrderId', $invoice->bitpay_order_id);
     }
 
-    private function getTestedClass()
+    private function getTestedClass(): UpdateInvoice
     {
-        return new UpdateInvoice(
-            $this->app->make(InvoiceRepositoryInterface::class),
-            $this->app->make(BitPayUpdateMapper::class),
-            $this->app->make(SendUpdateInvoiceNotification::class)
-        );
+        return $this->app->make(UpdateInvoice::class);
     }
 }
