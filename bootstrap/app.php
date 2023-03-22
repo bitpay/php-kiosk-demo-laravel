@@ -13,6 +13,7 @@
 
 use App\Configuration\BitPayConfigurationFactoryInterface;
 use App\Configuration\BitPayConfigurationInterface;
+use App\Features\Shared\StringConverter;
 use App\Repository\EloquentInvoiceRepository;
 use App\Repository\InvoiceRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
@@ -50,6 +51,11 @@ $app->singleton(
 $app->singleton(
     InvoiceRepositoryInterface::class,
     EloquentInvoiceRepository::class
+);
+
+$app->singleton(
+    StringConverter::class,
+    \App\Infrastructure\StringConverter::class
 );
 
 $app->singleton(

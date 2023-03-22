@@ -1,13 +1,22 @@
 <?php
 
-namespace App\Providers;
+namespace App\Infrastructure\Laravel;
 
-use App\Configuration\BitPayConfiguration;
 use App\Configuration\BitPayConfigurationFactoryInterface;
-use App\Configuration\BitPayConfigurationInterface;
 use App\Configuration\BitPayYamlConfigurationFactory;
-use BitPaySDK\Client;
+use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
+use App\Features\Shared\SseConfiguration;
+use App\Features\Shared\UrlProvider;
+use App\Features\Shared\UuidFactory;
+use App\Infrastructure\Mercure\SendMercureUpdateInvoiceNotification;
+use App\Infrastructure\Mercure\SseMercureConfiguration;
+use App\Infrastructure\RamseyUuidFactory;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\Mercure\Hub;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Jwt\StaticTokenProvider;
+use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\PropertyInfo\Extractor\ConstructorExtractor;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
@@ -29,6 +38,37 @@ class AppServiceProvider extends ServiceProvider
             BitPayYamlConfigurationFactory::class
         );
 
+        $this->app->bind(
+            UrlProvider::class,
+            LaravelUrlProvider::class
+        );
+
+        $this->app->bind(
+            UuidFactory::class,
+            RamseyUuidFactory::class
+        );
+
+        $this->app->bind(
+            SendUpdateInvoiceNotification::class,
+            SendMercureUpdateInvoiceNotification::class
+        );
+
+        $this->app->bind(
+            HubInterface::class,
+            function() {
+                return new Hub(
+                    env('MERCURE_PUBLISHER_PUBLISHER_URL'),
+                    new StaticTokenProvider(env('MERCURE_PUBLISHER_JWT_KEY')),
+                    null,
+                    env('MERCURE_PUBLISHER_SUBSCRIBER_URL')
+                );
+            }
+        );
+
+        $this->app->bind(
+            SseConfiguration::class,
+            SseMercureConfiguration::class
+        );
 
         $this->app->bind(
             SerializerInterface::class,

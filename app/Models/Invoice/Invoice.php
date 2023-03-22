@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property null|bool is_cancelled
  * @property null|string transaction_speed
  * @property string|null url
+ * @property string|null $uuid
  * @property BelongsTo invoice_payment
  * @property BelongsTo invoice_buyer
  * @property BelongsTo invoice_refund
@@ -49,6 +50,15 @@ class Invoice extends AppModel
     use HasFactory;
 
     protected $table ='invoice';
+
+    protected $cast = [
+        'acceptance_window' => 'boolean',
+        'target_confirmations' => 'boolean',
+        'low_fee_detected' => 'boolean',
+        'auto_redirect' => 'boolean',
+        'bitpay_id_required' => 'boolean',
+        'is_cancelled' => 'boolean'
+    ];
 
     protected $fillable = [
         'pos_data_json',
@@ -77,7 +87,8 @@ class Invoice extends AppModel
         'json_pay_pro_required',
         'bitpay_id_required',
         'is_cancelled',
-        'transaction_speed'
+        'transaction_speed',
+        'uuid'
     ];
 
     public function invoicePayment(): BelongsTo

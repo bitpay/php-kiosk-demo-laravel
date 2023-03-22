@@ -36,7 +36,7 @@ return new class extends Migration
 
         Schema::create('invoice_buyer', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('invoice_buyer_provided_info_id')->unsigned()->nullable();
+            $table->bigInteger('invoice_buyer_provided_info_id')->unsigned()->nullable(true);
             $table->string('name')->nullable();
             $table->string('address1')->nullable();
             $table->string('address2')->nullable();
@@ -73,13 +73,13 @@ return new class extends Migration
         Schema::create('invoice_payment_currency', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('invoice_payment_id')->unsigned();
-            $table->bigInteger('supported_transaction_currency_id')->unsigned();
-            $table->bigInteger('miner_fee_id')->unsigned();
+            $table->bigInteger('supported_transaction_currency_id')->unsigned()->nullable(true);
+            $table->bigInteger('miner_fee_id')->unsigned()->nullable(true);
             $table->string('currency_code', 10)->nullable(false);
             $table->string('total')->nullable(false);
             $table->string('subtotal')->nullable(false);
-            $table->string('display_total')->nullable(false);
-            $table->string('display_subtotal')->nullable(false);
+            $table->string('display_total')->nullable(true);
+            $table->string('display_subtotal')->nullable(true);
 
             $table->foreign('invoice_payment_id', 'fk_ipc_invoice_payment_id')
                 ->references('id')
@@ -160,7 +160,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('invoice_payment_id')->unsigned();
             $table->bigInteger('invoice_buyer_id')->unsigned();
-            $table->bigInteger('invoice_refund_id')->unsigned();
+            $table->bigInteger('invoice_refund_id')->unsigned()->nullable(true);
             $table->text('pos_data_json')->nullable(true);
             $table->float('price')->nullable(true);
             $table->string('currency_code')->nullable(true);
@@ -188,6 +188,7 @@ return new class extends Migration
             $table->boolean('bitpay_id_required')->nullable(true);
             $table->boolean('is_cancelled')->nullable(true);
             $table->string('transaction_speed')->nullable(true);
+            $table->string('uuid')->nullable(false);
 
             $table->foreign('invoice_payment_id', 'fk_invoice_invoice_payment_id')
                 ->references('id')

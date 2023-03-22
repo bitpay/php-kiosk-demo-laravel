@@ -29,7 +29,7 @@ class InvoiceSaver
     /**
      * @throws \JsonException
      */
-    public function fromSdkModel(BitPayInvoice $bitpayInvoice): Invoice
+    public function fromSdkModel(BitPayInvoice $bitpayInvoice, string $uuid): Invoice
     {
         $invoice = new Invoice();
 
@@ -38,9 +38,9 @@ class InvoiceSaver
         $refund = $this->getRefund($bitpayInvoice);
 
         $createdDate = $bitpayInvoice->getInvoiceTime() ?
-            $this->fromTimestampWithMillisecondsToDateTimeImmutable((int)$bitpayInvoice->getInvoiceTime()) : null;
+            DateTimeImmutableCreator::fromTimestamp((int)$bitpayInvoice->getInvoiceTime()) : null;
         $expirationTime = $bitpayInvoice->getExpirationTime() ?
-            $this->fromTimestampWithMillisecondsToDateTimeImmutable((int)$bitpayInvoice->getExpirationTime()) : null;
+            DateTimeImmutableCreator::fromTimestamp((int)$bitpayInvoice->getExpirationTime()) : null;
 
         $invoice->fill([
             'pos_data_json' => $bitpayInvoice->getPosData(),
@@ -70,7 +70,8 @@ class InvoiceSaver
             'bitpay_id_required' => $bitpayInvoice->getBitpayIdRequired(),
             'is_cancelled' => $bitpayInvoice->getIsCancelled(),
             'transaction_speed' => $bitpayInvoice->getTransactionSpeed(),
-            'url' => $bitpayInvoice->getUrl()
+            'url' => $bitpayInvoice->getUrl(),
+            'uuid' => $uuid
         ]);
 
         $invoice->invoicePayment()->associate($payment);
@@ -83,15 +84,6 @@ class InvoiceSaver
         $this->saveTransactions($bitpayInvoice, $invoice);
 
         return $invoice;
-    }
-
-    private function fromTimestampWithMillisecondsToDateTimeImmutable(?int $timestamp): ?\DateTimeImmutable
-    {
-        $convertedTimestamp = (int)($timestamp / 1000);
-        $dateTime = new \DateTime();
-        $dateTime->setTimestamp($convertedTimestamp);
-
-        return \DateTimeImmutable::createFromMutable($dateTime);
     }
 
     /**
