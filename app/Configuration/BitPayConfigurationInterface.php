@@ -26,4 +26,6 @@ interface BitPayConfigurationInterface
     public function getCurrencyIsoCode(): string;
 
     public function getFacade(): string;
+
+    public function isSignRequest(): bool;
 }

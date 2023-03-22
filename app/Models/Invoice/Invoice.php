@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property null|int id
  * @property null|string pos_data_json
  * @property null|float price
  * @property null|string currency_code

@@ -4,7 +4,11 @@ namespace App\Infrastructure\Laravel;
 
 use App\Configuration\BitPayConfigurationFactoryInterface;
 use App\Configuration\BitPayYamlConfigurationFactory;
+use App\Features\Invoice\UpdateInvoice\BaseUpdateInvoiceValidator;
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
+use App\Features\Invoice\UpdateInvoice\UpdateInvoiceIpnValidator;
+use App\Features\Invoice\UpdateInvoice\UpdateInvoiceValidator;
+use App\Features\Shared\Logger;
 use App\Features\Shared\SseConfiguration;
 use App\Features\Shared\UrlProvider;
 use App\Features\Shared\UuidFactory;
@@ -54,6 +58,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            Logger::class,
+            LaravelLogger::class
+        );
+
+        $this->app->bind(
             HubInterface::class,
             function() {
                 return new Hub(
@@ -68,6 +77,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             SseConfiguration::class,
             SseMercureConfiguration::class
+        );
+
+        $this->app->bind(
+            UpdateInvoiceIpnValidator::class,
+            function() {
+                return new UpdateInvoiceIpnValidator(
+                    $this->app->make(BaseUpdateInvoiceValidator::class),
+                    $this->app->make(Logger::class)
+                );
+            }
+        );
+
+        $this->app->bind(
+            UpdateInvoiceValidator::class,
+            UpdateInvoiceIpnValidator::class
         );
 
         $this->app->bind(

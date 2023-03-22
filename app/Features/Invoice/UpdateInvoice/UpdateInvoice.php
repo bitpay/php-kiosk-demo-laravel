@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Features\Invoice\UpdateInvoice;
 
+use App\Configuration\BitPayConfigurationInterface;
 use App\Exceptions\MissingInvoice;
+use App\Features\Shared\Logger;
+use App\Http\Services\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\InvoicePaymentCurrency;
@@ -15,15 +18,27 @@ class UpdateInvoice
     private InvoiceRepositoryInterface $invoiceRepository;
     private SendUpdateInvoiceNotification $sendUpdateInvoiceNotification;
     private BitPayUpdateMapper $bitPayUpdateMapper;
+    private BitPayClientFactory $bitPayClientFactory;
+    private BitPayConfigurationInterface $bitPayConfiguration;
+    private Logger $logger;
+    private UpdateInvoiceValidator $updateInvoiceValidator;
 
     public function __construct(
         InvoiceRepositoryInterface $invoiceRepository,
         BitPayUpdateMapper $bitPayUpdateMapper,
-        SendUpdateInvoiceNotification $sendUpdateInvoiceNotification
+        BitPayClientFactory $bitPayClientFactory,
+        BitPayConfigurationInterface $bitPayConfiguration,
+        UpdateInvoiceValidator $updateInvoiceValidator,
+        SendUpdateInvoiceNotification $sendUpdateInvoiceNotification,
+        Logger $logger
     ) {
         $this->invoiceRepository = $invoiceRepository;
         $this->bitPayUpdateMapper = $bitPayUpdateMapper;
+        $this->bitPayClientFactory = $bitPayClientFactory;
         $this->sendUpdateInvoiceNotification = $sendUpdateInvoiceNotification;
+        $this->logger = $logger;
+        $this->updateInvoiceValidator = $updateInvoiceValidator;
+        $this->bitPayConfiguration = $bitPayConfiguration;
     }
 
     public function usingBitPayUpdateResponse(string $uuid, array $data): Invoice
@@ -33,9 +48,24 @@ class UpdateInvoice
             throw new MissingInvoice('Missing invoice');
         }
 
-        $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
+        $client = $this->bitPayClientFactory->create();
+        $bitPayInvoice = $client->getInvoice(
+            $invoice->bitpay_id,
+            $this->bitPayConfiguration->getFacade(),
+            $this->bitPayConfiguration->isSignRequest()
+        );
 
-        $this->updateInvoice($invoice, $updateInvoiceData);
+        try {
+            $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
+            $this->updateInvoiceValidator->execute($data, $bitPayInvoice);
+            $this->updateInvoice($invoice, $updateInvoiceData);
+        } catch (\Exception $e) {
+            $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
+                'id' => $invoice->id
+            ]);
+            throw new \RuntimeException($e->getMessage());
+        }
+
         $this->sendUpdateInvoiceNotification->execute($invoice);
 
         return $invoice;
@@ -118,5 +148,9 @@ class UpdateInvoice
         $invoice->update($updateInvoiceData);
         $this->updatePayment($invoice, $updateInvoiceData);
         $this->updatePaymentCurrencies($invoice, $updateInvoiceData);
+
+        $this->logger->info('INVOICE_UPDATE_SUCCESS', 'Successfully updated invoice', [
+            'id' => $invoice->id
+        ]);
     }
 }
