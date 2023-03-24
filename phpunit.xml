@@ -8,6 +8,7 @@
     <testsuites>
         <testsuite name="Integration">
             <directory suffix="Test.php">./tests/Integration</directory>
+            <exclude>./tests/Integration/IntegrationTest.php</exclude>
         </testsuite>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
@@ -19,6 +20,8 @@
         </include>
         <exclude>
             <directory suffix=".php">./app/Infrastructure</directory>
+            <directory suffix=".php">./app/Http</directory>
+            <directory suffix=".php">./app/Models</directory>
         </exclude>
         <report>
             <html outputDirectory="./codeCoverage/html" />
@@ -28,11 +31,12 @@
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-         <env name="DB_CONNECTION" value="sqlite"/>
-         <env name="DB_DATABASE" value=":memory:"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="LOG_CHANNEL" value="null"/>
     </php>
 </phpunit>

@@ -2,17 +2,17 @@
 
 namespace App\Infrastructure\Laravel;
 
-use App\Configuration\BitPayConfigurationFactoryInterface;
-use App\Configuration\BitPayYamlConfigurationFactory;
+use App\Features\Shared\Configuration\BitPayConfigurationFactoryInterface;
+use App\Features\Shared\Configuration\BitPayYamlConfigurationFactory;
 use App\Features\Invoice\UpdateInvoice\BaseUpdateInvoiceValidator;
-use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
+use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceIpnValidator;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceValidator;
 use App\Features\Shared\Logger;
 use App\Features\Shared\SseConfiguration;
 use App\Features\Shared\UrlProvider;
 use App\Features\Shared\UuidFactory;
-use App\Infrastructure\Mercure\SendMercureUpdateInvoiceNotification;
+use App\Infrastructure\Mercure\SendMercureUpdateInvoiceEventStream;
 use App\Infrastructure\Mercure\SseMercureConfiguration;
 use App\Infrastructure\RamseyUuidFactory;
 use Illuminate\Support\ServiceProvider;
@@ -53,8 +53,8 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            SendUpdateInvoiceNotification::class,
-            SendMercureUpdateInvoiceNotification::class
+            SendUpdateInvoiceEventStream::class,
+            SendMercureUpdateInvoiceEventStream::class
         );
 
         $this->app->bind(

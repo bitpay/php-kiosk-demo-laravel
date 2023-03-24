@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Http;
 
-use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
+use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Http\Services\BitPayClientFactory;
-use App\Repository\InvoiceRepositoryInterface;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 use BitPaySDK\Model\Facade;
 use BitPaySDK\Model\Invoice\Invoice;
 use BitPaySDK\PosClient;
@@ -84,7 +84,7 @@ class UpdateInvoiceTest extends IntegrationTest
             });
         });
 
-        $this->mock(SendUpdateInvoiceNotification::class, function (MockInterface $mock) {
+        $this->mock(SendUpdateInvoiceEventStream::class, function (MockInterface $mock) {
             $mock->shouldReceive('execute')->times(1);
         });
 

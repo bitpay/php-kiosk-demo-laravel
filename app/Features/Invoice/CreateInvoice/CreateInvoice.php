@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Features\Invoice;
+namespace App\Features\Invoice\CreateInvoice;
 
-use App\Configuration\BitPayConfigurationFactoryInterface;
-use App\Configuration\BitPayConfigurationInterface;
+use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Features\Shared\InvoiceSaver;
 use App\Features\Shared\Logger;
 use App\Features\Shared\UrlProvider;
@@ -18,7 +17,7 @@ use BitPaySDK\Model\Invoice\Invoice as BitPayInvoice;
 
 class CreateInvoice
 {
-    private BitPayConfigurationFactoryInterface $bitPayConfigurationFactory;
+    private BitPayConfigurationInterface $bitPayConfiguration;
     private BitPayClientFactory $bitPayClientFactory;
     private InvoiceSaver $invoiceSaver;
     private UuidFactory $uuidFactory;
@@ -26,14 +25,14 @@ class CreateInvoice
     private Logger $logger;
 
     public function __construct(
-        BitPayConfigurationFactoryInterface $bitPayConfigurationFactory,
+        BitPayConfigurationInterface $bitPayConfiguration,
         BitPayClientFactory $bitPayClientFactory,
         InvoiceSaver $invoiceSaver,
         UuidFactory $uuidFactory,
         UrlProvider $urlProvider,
         Logger $logger
     ) {
-        $this->bitPayConfigurationFactory = $bitPayConfigurationFactory;
+        $this->bitPayConfiguration = $bitPayConfiguration;
         $this->bitPayClientFactory = $bitPayClientFactory;
         $this->invoiceSaver = $invoiceSaver;
         $this->uuidFactory = $uuidFactory;
@@ -48,13 +47,10 @@ class CreateInvoice
     public function execute(array $params): Invoice
     {
         try {
-            /** @var BitPayConfigurationInterface $bitPayConfiguration */
-            $bitPayConfiguration = $this->bitPayConfigurationFactory->create();
-            $validatedParams = $this->validateParams($bitPayConfiguration, $params);
-            $posDataJson = json_encode($validatedParams, JSON_THROW_ON_ERROR);
+            $validatedParams = $this->validateParams($params);
             $uuid = $this->uuidFactory->create();
-            $requestData = $this->createRequestData($validatedParams['price'], $bitPayConfiguration, $posDataJson, $uuid);
-            $bitpayInvoice = $this->createBitpayInvoice($bitPayConfiguration, $requestData);
+            $requestData = $this->createRequestData($validatedParams, $uuid);
+            $bitpayInvoice = $this->createBitpayInvoice($requestData);
 
             $invoice = $this->invoiceSaver->fromSdkModel($bitpayInvoice, $uuid);
             $this->logger->info('INVOICE_CREATE_SUCCESS', 'Successfully created invoice', [
@@ -71,11 +67,11 @@ class CreateInvoice
         return $invoice;
     }
 
-    private function validateParams(BitPayConfigurationInterface $bitPayConfiguration, array $params): array
+    private function validateParams(array $params): array
     {
         $requiredParametersName = [];
 
-        $bitPayFields = $bitPayConfiguration->getDesign()->getPosData()->getFields();
+        $bitPayFields = $this->bitPayConfiguration->getDesign()->getPosData()->getFields();
         foreach ($bitPayFields as $field) {
             if ($field->isRequired() === true) {
                 $requiredParametersName[] = $field->getName();
@@ -97,26 +93,27 @@ class CreateInvoice
             }
         }
 
+        if (!array_key_exists('price', $validatedParams)) {
+            throw new \RuntimeException('Missing price');
+        }
+
         $validatedParams['price'] = number_format((float)$validatedParams['price'], 2);
 
         return $validatedParams;
     }
 
     /**
-     * @param $price
-     * @param BitPayConfigurationInterface $bitPayConfiguration
-     * @param bool|string $posDataJson
-     * @return array
-     * @throws \BitpaySDK\Exceptions\BitPayException
+     * @param array $validatedParams
+     * @param string $uuid
+     * @return BitPayInvoice
+     * @throws \JsonException
      */
-    private function createRequestData(
-        $price,
-        BitPayConfigurationInterface $bitPayConfiguration,
-        string $posDataJson,
-        string $uuid
-    ): BitPayInvoice {
-        $invoice = new BitPayInvoice((float)$price, $bitPayConfiguration->getCurrencyIsoCode());
-        $notificationEmail = $bitPayConfiguration->getNotificationEmail();
+    private function createRequestData(array $validatedParams, string $uuid): BitPayInvoice
+    {
+        $price = $validatedParams['price'];
+        $posDataJson = json_encode($validatedParams, JSON_THROW_ON_ERROR);
+        $invoice = new BitPayInvoice((float)$price, $this->bitPayConfiguration->getCurrencyIsoCode());
+        $notificationEmail = $this->bitPayConfiguration->getNotificationEmail();
         $notificationUrl = $this->getNotificationUrl($uuid);
 
         $invoice->setOrderId((string)uniqid('', true));
@@ -134,18 +131,14 @@ class CreateInvoice
     }
 
     /**
-     * @param BitPayConfigurationInterface $bitPayConfiguration
      * @param BitPayInvoice $requestedInvoice
      * @return BitPayInvoice
      * @throws \BitpaySDK\Exceptions\BitPayException
      */
-    private function createBitpayInvoice(
-        BitPayConfigurationInterface $bitPayConfiguration,
-        BitPayInvoice $requestedInvoice
-    ): BitPayInvoice {
+    private function createBitpayInvoice(BitPayInvoice $requestedInvoice): BitPayInvoice {
         $client = $this->bitPayClientFactory->create();
 
-        $facade = $bitPayConfiguration->getFacade();
+        $facade = $this->bitPayConfiguration->getFacade();
         $signRequest = $facade !== Facade::Pos;
 
         return $client->createInvoice($requestedInvoice, $facade, $signRequest);

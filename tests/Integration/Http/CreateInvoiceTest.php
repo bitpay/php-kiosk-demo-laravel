@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Http;
 
-use App\Repository\InvoiceRepositoryInterface;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 use Tests\Integration\IntegrationTest;
 
 class CreateInvoiceTest extends IntegrationTest

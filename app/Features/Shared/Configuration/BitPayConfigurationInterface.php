@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Configuration;
+namespace App\Features\Shared\Configuration;
 
 interface BitPayConfigurationInterface
 {

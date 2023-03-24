@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Features\Invoice\UpdateInvoice;
 
-use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
-use App\Features\Invoice\UpdateInvoice\UpdateInvoice;
+use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
+use App\Features\Invoice\UpdateInvoice\UpdateInvoiceUsingBitPayIpn;
 use App\Http\Services\BitPayClientFactory;
-use App\Repository\InvoiceRepositoryInterface;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 use BitPaySDK\Model\Facade;
 use BitPaySDK\Model\Invoice\Invoice;
 use BitPaySDK\PosClient;
@@ -40,12 +40,12 @@ class UpdateInvoiceTest extends IntegrationTest
                 }
             });
         });
-        $this->mock(SendUpdateInvoiceNotification::class, function (MockInterface $mock) {
+        $this->mock(SendUpdateInvoiceEventStream::class, function (MockInterface $mock) {
             $mock->shouldReceive('execute')->times(1);
         });
 
         $testedClass = $this->getTestedClass();
-        $testedClass->usingBitPayUpdateResponse(ExampleInvoice::UUID, $data);
+        $testedClass->execute(ExampleInvoice::UUID, $data);
 
         $invoice = $this->app->make(InvoiceRepositoryInterface::class)->findOne(1);
 
@@ -68,8 +68,8 @@ class UpdateInvoiceTest extends IntegrationTest
         Assert::assertEquals('someBitpayOrderId', $invoice->bitpay_order_id);
     }
 
-    private function getTestedClass(): UpdateInvoice
+    private function getTestedClass(): UpdateInvoiceUsingBitPayIpn
     {
-        return $this->app->make(UpdateInvoice::class);
+        return $this->app->make(UpdateInvoiceUsingBitPayIpn::class);
     }
 }

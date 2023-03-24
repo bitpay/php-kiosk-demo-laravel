@@ -169,4 +169,9 @@ class Invoice extends AppModel
     {
         return $this->getBooleanValue($value);
     }
+
+    public function getBitpayId(): string
+    {
+        return $this->getAttribute('bitpay_id');
+    }
 }

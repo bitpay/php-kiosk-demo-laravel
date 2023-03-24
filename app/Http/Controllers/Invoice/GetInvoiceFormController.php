@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Invoice;
 
-use App\Configuration\BitPayConfigurationInterface;
+use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
