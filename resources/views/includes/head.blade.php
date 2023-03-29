@@ -1,5 +1,5 @@
 @php
-    /** @var \App\Configuration\BitPayConfiguration $configuration **/
+    /** @var \App\Features\Shared\Configuration\BitPayConfiguration $configuration **/
 @endphp
 
 <head>

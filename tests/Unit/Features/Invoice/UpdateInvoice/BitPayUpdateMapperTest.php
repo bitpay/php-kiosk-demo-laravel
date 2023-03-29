@@ -7,7 +7,6 @@ namespace Tests\Unit\Features\Invoice\UpdateInvoice;
 use App\Features\Invoice\UpdateInvoice\BitPayUpdateMapper;
 use App\Features\Shared\DateTimeImmutableCreator;
 use App\Infrastructure\StringConverter;
-use JetBrains\PhpStorm\Pure;
 use Tests\TestCase;
 
 class BitPayUpdateMapperTest extends TestCase
@@ -31,6 +30,7 @@ class BitPayUpdateMapperTest extends TestCase
             'currency_code' => 'USD',
             'expiration_time' => DateTimeImmutableCreator::fromTimestamp(1678715559517),
             'exception_status' => 'false',
+            'invoice_payment' => ['amount_paid' => 0],
             'invoice_payment_currency' => [
                 [
                     'currency_code' => 'BTC',
@@ -93,7 +93,6 @@ class BitPayUpdateMapperTest extends TestCase
                     'subtotal' => 76500000,
                 ]
             ],
-            'amount_paid' => 0,
             'bitpay_order_id' => '640f27154e58f8.40716035',
             'created_date' => DateTimeImmutableCreator::fromTimestamp(1678714659517),
             'buyer_fields' => [], // todo,
@@ -102,7 +101,7 @@ class BitPayUpdateMapperTest extends TestCase
         self::assertEquals($expected, $mappedData->toArray());
     }
 
-    #[Pure] private function getTestedClass(): BitPayUpdateMapper
+    private function getTestedClass(): BitPayUpdateMapper
     {
         return new BitPayUpdateMapper(new StringConverter());
     }

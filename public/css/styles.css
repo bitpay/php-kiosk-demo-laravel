@@ -1,3 +1,7 @@
 #hero {
     background-color: #0e204e
 }
+
+#snackbars {
+    z-index: 10;
+}

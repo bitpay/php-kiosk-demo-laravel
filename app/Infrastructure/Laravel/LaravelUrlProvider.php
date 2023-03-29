@@ -11,6 +11,11 @@ class LaravelUrlProvider implements UrlProvider
 {
     public function applicationUrl(): string
     {
+        $url = config('APP_URL');
+        if ($url) {
+            return $url . '/';
+        }
+
         return Url::to('/');
     }
 }

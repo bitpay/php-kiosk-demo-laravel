@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Services;
 
-use App\Configuration\BitPayConfigurationFactoryInterface;
+use App\Features\Shared\Configuration\BitPayConfigurationFactoryInterface;
 use BitPaySDK\Client;
 use BitPaySDK\PosClient;
 

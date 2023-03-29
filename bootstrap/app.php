@@ -11,11 +11,12 @@
 |
 */
 
-use App\Configuration\BitPayConfigurationFactoryInterface;
-use App\Configuration\BitPayConfigurationInterface;
+use App\Features\Shared\Configuration\BitPayConfigurationFactoryInterface;
+use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Features\Shared\StringConverter;
-use App\Repository\EloquentInvoiceRepository;
-use App\Repository\InvoiceRepositoryInterface;
+use App\Infrastructure\Laravel\Handler;
+use App\Infrastructure\Laravel\Repository\EloquentInvoiceRepository;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
 
 $app = new Illuminate\Foundation\Application(
@@ -40,12 +41,12 @@ $app->singleton(
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
+    App\Infrastructure\Laravel\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    Handler::class
 );
 
 $app->singleton(

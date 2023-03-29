@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Invoice;
 
-use App\Configuration\BitPayConfigurationInterface;
-use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
+use App\Features\Shared\Configuration\BitPayConfigurationInterface;
+use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Shared\Logger;
 use App\Features\Shared\Logger\LogCode;
 use App\Features\Shared\SseConfiguration;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\Invoice;
-use App\Repository\InvoiceRepositoryInterface;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class GetInvoiceViewController extends Controller
 {
@@ -45,9 +46,7 @@ class GetInvoiceViewController extends Controller
         /** @var Invoice $invoice */
         $invoice = $this->invoiceRepository->findOne($id);
         if (!$invoice) {
-            return view('pages.invoice.missingInvoice', [
-                'configuration' => $this->bitPayConfiguration
-            ]);
+            abort(Response::HTTP_NOT_FOUND);
         }
 
         $this->logger->info('INVOICE_GET', 'Loaded invoice', ['id' => $id]);
@@ -56,7 +55,7 @@ class GetInvoiceViewController extends Controller
             'configuration' => $this->bitPayConfiguration,
             'invoice' => $invoice,
             'sseUrl' => $this->sseConfiguration->publicUrl(),
-            'sseTopic' => SendUpdateInvoiceNotification::TOPIC
+            'sseTopic' => SendUpdateInvoiceEventStream::TOPIC
         ]);
     }
 

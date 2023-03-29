@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Features\Invoice\UpdateInvoice;
 
-use App\Exceptions\ValidationFailed;
+use App\Shared\Exceptions\ValidationFailed;
 use BitPaySDK\Model\Invoice\Invoice as BitPayInvoice;
 
 interface UpdateInvoiceValidator

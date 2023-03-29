@@ -1,5 +1,5 @@
 @php
-    /** @var \App\Configuration\BitPayConfiguration $configuration **/
+    /** @var \App\Features\Shared\Configuration\BitPayConfiguration $configuration **/
     /** @var App\Models\Invoice\Invoice $invoice **/
 @endphp
 
@@ -64,6 +64,7 @@
         </main>
     </div>
 
+    <script type="text/javascript" src="{{ URL::asset ('js/invoiceSnackBar.js') }}"></script>
     <script type="text/javascript" src="{{ URL::asset ('js/invoices/updateInvoiceFromGridView.js') }}"></script>
     <script type="text/javascript">new UpdateStatusSse('{{$sseUrl}}', '{{$sseTopic}}').execute()</script>
 @stop
