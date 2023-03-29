@@ -2,16 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Configuration;
+namespace App\Features\Shared\Configuration;
 
 class BitPayConfiguration implements BitPayConfigurationInterface
 {
-    public string $environment;
-    public string $facade;
-    public ?Design $design;
-    public ?string $token;
-    public ?string $notificationEmail;
+    private ?string $environment;
+    private ?string $facade;
+    private ?Design $design;
+    private ?string $token;
+    private ?string $notificationEmail;
 
+    /**
+     * @param string $facade
+     * @param string|null $environment
+     * @param Design|null $design
+     * @param string|null $token
+     * @param string|null $notificationEmail
+     */
+    public function __construct(
+        ?string $facade,
+        ?string $environment,
+        ?Design $design,
+        ?string $token,
+        ?string $notificationEmail
+    ) {
+        $this->environment = $environment;
+        $this->facade = $facade;
+        $this->design = $design;
+        $this->token = $token;
+        $this->notificationEmail = $notificationEmail;
+    }
     /**
      * @return string
      */

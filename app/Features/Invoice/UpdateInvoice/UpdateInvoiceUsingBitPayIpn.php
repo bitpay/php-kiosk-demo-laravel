@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Features\Invoice\UpdateInvoice;
 
-use App\Configuration\BitPayConfigurationInterface;
-use App\Exceptions\MissingInvoice;
+use App\Features\Shared\Configuration\BitPayConfigurationInterface;
+use App\Shared\Exceptions\MissingInvoice;
 use App\Features\Shared\Logger;
 use App\Http\Services\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\InvoicePaymentCurrency;
-use App\Repository\InvoiceRepositoryInterface;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 
-class UpdateInvoice
+class UpdateInvoiceUsingBitPayIpn
 {
     private InvoiceRepositoryInterface $invoiceRepository;
-    private SendUpdateInvoiceNotification $sendUpdateInvoiceNotification;
+    private SendUpdateInvoiceEventStream $sendUpdateInvoiceEventStream;
     private BitPayUpdateMapper $bitPayUpdateMapper;
     private BitPayClientFactory $bitPayClientFactory;
     private BitPayConfigurationInterface $bitPayConfiguration;
@@ -29,46 +29,43 @@ class UpdateInvoice
         BitPayClientFactory $bitPayClientFactory,
         BitPayConfigurationInterface $bitPayConfiguration,
         UpdateInvoiceValidator $updateInvoiceValidator,
-        SendUpdateInvoiceNotification $sendUpdateInvoiceNotification,
+        SendUpdateInvoiceEventStream $sendUpdateInvoiceEventStream,
         Logger $logger
     ) {
         $this->invoiceRepository = $invoiceRepository;
         $this->bitPayUpdateMapper = $bitPayUpdateMapper;
         $this->bitPayClientFactory = $bitPayClientFactory;
-        $this->sendUpdateInvoiceNotification = $sendUpdateInvoiceNotification;
+        $this->sendUpdateInvoiceEventStream = $sendUpdateInvoiceEventStream;
         $this->logger = $logger;
         $this->updateInvoiceValidator = $updateInvoiceValidator;
         $this->bitPayConfiguration = $bitPayConfiguration;
     }
 
-    public function usingBitPayUpdateResponse(string $uuid, array $data): Invoice
+    public function execute(string $uuid, array $data): void
     {
         $invoice = $this->invoiceRepository->findOneByUuid($uuid);
         if (!$invoice) {
             throw new MissingInvoice('Missing invoice');
         }
 
-        $client = $this->bitPayClientFactory->create();
-        $bitPayInvoice = $client->getInvoice(
-            $invoice->bitpay_id,
-            $this->bitPayConfiguration->getFacade(),
-            $this->bitPayConfiguration->isSignRequest()
-        );
-
         try {
+            $client = $this->bitPayClientFactory->create();
+            $bitPayInvoice = $client->getInvoice(
+                $invoice->getBitpayId(),
+                $this->bitPayConfiguration->getFacade(),
+                $this->bitPayConfiguration->isSignRequest()
+            );
+
             $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
             $this->updateInvoiceValidator->execute($data, $bitPayInvoice);
             $this->updateInvoice($invoice, $updateInvoiceData);
-        } catch (\Exception $e) {
+            $this->sendUpdateInvoiceEventStream->execute($invoice);
+        } catch (\Exception|\TypeError $e) {
             $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
                 'id' => $invoice->id
             ]);
             throw new \RuntimeException($e->getMessage());
         }
-
-        $this->sendUpdateInvoiceNotification->execute($invoice);
-
-        return $invoice;
     }
 
     private function updatePaymentCurrencies(Invoice $invoice, array $updateInvoiceData): void
@@ -90,7 +87,7 @@ class UpdateInvoice
         if ($currencies !== null) {
             /** @var InvoicePaymentCurrency $paymentCurrency */
             foreach ($currencies as $paymentCurrency) {
-                $availableCurrencies[$paymentCurrency->currency_code] = $paymentCurrency;
+                $availableCurrencies[$paymentCurrency->getCurrencyCode()] = $paymentCurrency;
             }
         }
 
@@ -105,7 +102,6 @@ class UpdateInvoice
             $invoicePaymentCurrency->fill($currencyToUpdate);
             $invoicePaymentCurrency->save();
         }
-
     }
 
     /**

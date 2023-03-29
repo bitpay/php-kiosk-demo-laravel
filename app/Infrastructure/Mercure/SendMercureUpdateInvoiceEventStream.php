@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Mercure;
 
-use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
+use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Models\Invoice\Invoice;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 
-class SendMercureUpdateInvoiceNotification implements SendUpdateInvoiceNotification
+class SendMercureUpdateInvoiceEventStream implements SendUpdateInvoiceEventStream
 {
     private HubInterface $hub;
 

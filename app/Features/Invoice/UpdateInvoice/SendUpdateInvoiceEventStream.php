@@ -6,7 +6,7 @@ namespace App\Features\Invoice\UpdateInvoice;
 
 use App\Models\Invoice\Invoice;
 
-interface SendUpdateInvoiceNotification
+interface SendUpdateInvoiceEventStream
 {
     public const TOPIC = 'update-invoice';
 

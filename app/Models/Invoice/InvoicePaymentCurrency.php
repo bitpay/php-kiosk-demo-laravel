@@ -71,4 +71,9 @@ class InvoicePaymentCurrency extends AppModel
     {
         return $this->getAttribute('exchangeRates');
     }
+
+    public function getCurrencyCode(): string
+    {
+        return $this->getAttribute('currency_code');
+    }
 }

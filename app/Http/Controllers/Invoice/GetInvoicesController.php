@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Invoice;
 
-use App\Configuration\BitPayConfigurationInterface;
-use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
+use App\Features\Shared\Configuration\BitPayConfigurationInterface;
+use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Shared\Logger;
 use App\Features\Shared\SseConfiguration;
 use App\Http\Controllers\Controller;
-use App\Repository\InvoiceRepositoryInterface;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -44,7 +44,7 @@ class GetInvoicesController extends Controller
             'configuration' => $this->bitPayConfiguration,
             'invoices' => $invoices,
             'sseUrl' => $this->sseConfiguration->publicUrl(),
-            'sseTopic' => SendUpdateInvoiceNotification::TOPIC
+            'sseTopic' => SendUpdateInvoiceEventStream::TOPIC
         ]);
     }
 }

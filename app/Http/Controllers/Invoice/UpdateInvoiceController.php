@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Invoice;
 
-use App\Features\Invoice\UpdateInvoice\UpdateInvoice;
+use App\Shared\Exceptions\MissingInvoice;
+use App\Features\Invoice\UpdateInvoice\UpdateInvoiceUsingBitPayIpn;
 use App\Features\Shared\Logger;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,10 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UpdateInvoiceController extends Controller
 {
-    private UpdateInvoice $updateInvoice;
+    private UpdateInvoiceUsingBitPayIpn $updateInvoice;
     private Logger $logger;
 
-    public function __construct(UpdateInvoice $updateInvoice, Logger $logger)
+    public function __construct(UpdateInvoiceUsingBitPayIpn $updateInvoice, Logger $logger)
     {
         $this->updateInvoice = $updateInvoice;
         $this->logger = $logger;
@@ -28,7 +29,13 @@ class UpdateInvoiceController extends Controller
         /** @var array $data */
         $data = $request->request->get('data');
         $data['uuid'] = $uuid;
-        $this->updateInvoice->usingBitPayUpdateResponse($uuid, $data);
+        try {
+            $this->updateInvoice->execute($uuid, $data);
+        } catch (MissingInvoice $e) {
+            return response(null, Response::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            return response('Unable to process update', Response::HTTP_BAD_REQUEST);
+        }
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Configuration;
+namespace App\Features\Shared\Configuration;
 
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -18,9 +18,14 @@ class BitPayYamlConfigurationFactory implements BitPayConfigurationFactoryInterf
 
     public function create(): BitPayConfigurationInterface
     {
-        $directory = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+        $directory = __DIR__ . DIRECTORY_SEPARATOR
+            . '..' . DIRECTORY_SEPARATOR
+            . '..' . DIRECTORY_SEPARATOR
+            . '..' . DIRECTORY_SEPARATOR
+            . '..' . DIRECTORY_SEPARATOR;
+        ;
         $data = Yaml::parse(file_get_contents(
-            $directory . DIRECTORY_SEPARATOR . 'application.yaml'
+            $directory  . 'application.yaml'
         ));
 
         return  $this->serializer->denormalize(

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Configuration;
+namespace App\Features\Shared\Configuration;
 
 class Hero
 {
@@ -32,14 +32,6 @@ class Hero
     }
 
     /**
-     * @param string $bgColor
-     */
-    public function setBgColor(string $bgColor): void
-    {
-        $this->bgColor = $bgColor;
-    }
-
-    /**
      * @return string
      */
     public function getTitle(): string
@@ -48,26 +40,10 @@ class Hero
     }
 
     /**
-     * @param string $title
-     */
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
-    }
-
-    /**
      * @return string
      */
     public function getBody(): string
     {
         return $this->body;
-    }
-
-    /**
-     * @param string $body
-     */
-    public function setBody(string $body): void
-    {
-        $this->body = $body;
     }
 }

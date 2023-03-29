@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Models\Invoice;
 
 use App\Models\Invoice\Invoice;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

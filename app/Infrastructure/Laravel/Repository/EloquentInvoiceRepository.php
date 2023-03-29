@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Infrastructure\Laravel\Repository;
 
 use App\Models\Invoice\Invoice;
+use App\Models\Invoice\InvoiceRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class EloquentInvoiceRepository implements InvoiceRepositoryInterface

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Invoice;
 
-use App\Features\Invoice\CreateInvoice;
+use App\Features\Invoice\CreateInvoice\CreateInvoice;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
