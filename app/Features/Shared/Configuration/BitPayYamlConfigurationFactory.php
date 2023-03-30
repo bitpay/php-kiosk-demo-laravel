@@ -30,8 +30,8 @@ class BitPayYamlConfigurationFactory implements BitPayConfigurationFactoryInterf
             . '..' . DIRECTORY_SEPARATOR;
 
         $configurationFiles = self::AVAILABLE_CONFIGURATION_FILES;
-        if (config('app.env') === 'testing' && config('test.type') === 'integration') {
-            $configurationFiles = ['application-test.yaml'];
+        if (config('application-file')) {
+            $configurationFiles = [config('application-file')];
         }
 
         $data = null;

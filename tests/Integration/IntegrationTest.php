@@ -15,13 +15,13 @@ class IntegrationTest extends TestCase
     {
         parent::setUp();
 
-        config(['test.type' => 'integration']);
+        config(['application-file' => 'application-test.yaml']);
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
 
-        config(['test.type' => null]);
+        config(['application-file' => null]);
     }
 }
