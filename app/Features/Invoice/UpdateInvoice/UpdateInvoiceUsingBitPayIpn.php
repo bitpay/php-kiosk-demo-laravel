@@ -7,7 +7,7 @@ namespace App\Features\Invoice\UpdateInvoice;
 use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Shared\Exceptions\MissingInvoice;
 use App\Features\Shared\Logger;
-use App\Http\Services\BitPayClientFactory;
+use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\InvoicePaymentCurrency;
@@ -59,7 +59,8 @@ class UpdateInvoiceUsingBitPayIpn
             $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
             $this->updateInvoiceValidator->execute($data, $bitPayInvoice);
             $this->updateInvoice($invoice, $updateInvoiceData);
-            $this->sendUpdateInvoiceEventStream->execute($invoice);
+
+            $this->sendUpdateInvoiceEventStream($invoice, $data);
         } catch (\Exception|\TypeError $e) {
             $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
                 'id' => $invoice->id
@@ -148,5 +149,40 @@ class UpdateInvoiceUsingBitPayIpn
         $this->logger->info('INVOICE_UPDATE_SUCCESS', 'Successfully updated invoice', [
             'id' => $invoice->id
         ]);
+    }
+
+    private function sendUpdateInvoiceEventStream(Invoice $invoice, array $data): void
+    {
+        $eventName = $data['event'] ?? null;
+
+        $this->sendUpdateInvoiceEventStream->execute(
+            $invoice,
+            $this->getEventMessageTypeFromEventName($eventName),
+            $this->getEventMessageFromEventName($invoice->getBitpayId(), $eventName)
+        );
+    }
+
+    private function getEventMessageTypeFromEventName(?string $eventName): ?UpdateInvoiceEventType
+    {
+        return match ($eventName) {
+            null, 'invoice_manuallyNotified', 'invoice_refundComplete' => null,
+            'invoice_paidInFull', 'invoice_confirmed', 'invoice_completed' => UpdateInvoiceEventType::SUCCESS,
+            'invoice_expired', 'invoice_failedToConfirm', 'invoice_declined' => UpdateInvoiceEventType::ERROR,
+            default => null
+        };
+    }
+
+    private function getEventMessageFromEventName(string $invoiceId, ?string $eventName): ?string
+    {
+        return match($eventName) {
+            null, 'invoice_manuallyNotified', 'invoice_refundComplete' => null,
+            'invoice_paidInFull' => sprintf('Invoice %s has been paid in full.', $invoiceId),
+            'invoice_expired' => sprintf('Invoice %s has expired.', $invoiceId),
+            'invoice_confirmed' => sprintf('Invoice %s has been confirmed.', $invoiceId),
+            'invoice_completed' => sprintf('Invoice %s is complete.', $invoiceId),
+            'invoice_failedToConfirm' => sprintf('Invoice %s has failed to confirm.', $invoiceId),
+            'invoice_declined' => sprintf('Invoice %s has been declined.', $invoiceId),
+            default => null
+        };
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Services;
+namespace App\Features\Shared;
 
 use App\Features\Shared\Configuration\BitPayConfigurationFactoryInterface;
 use BitPaySDK\Client;

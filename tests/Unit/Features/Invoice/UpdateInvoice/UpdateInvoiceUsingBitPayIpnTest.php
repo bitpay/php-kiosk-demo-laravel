@@ -9,10 +9,11 @@ use App\Shared\Exceptions\MissingInvoice;
 use App\Features\Invoice\UpdateInvoice\BitPayUpdateMapper;
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Invoice\UpdateInvoice\UpdatedInvoiceDto;
+use App\Features\Invoice\UpdateInvoice\UpdateInvoiceEventType;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceUsingBitPayIpn;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceValidator;
 use App\Features\Shared\Logger;
-use App\Http\Services\BitPayClientFactory;
+use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\InvoicePaymentCurrency;
@@ -81,7 +82,7 @@ class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
         $facade = 'pos';
         $repository->method('findOneByUuid')->with($uuid)->willReturn($invoice);
         $clientFactory->method('create')->willReturn($client);
-        $invoice->expects(self::once())->method('getBitpayId')->willReturn($bitPayInvoiceId);
+        $invoice->expects(self::exactly(2))->method('getBitpayId')->willReturn($bitPayInvoiceId);
         $invoice->expects(self::exactly(2))->method('getInvoicePayment')->willReturn($invoicePayment);
         $invoicePayment->expects(self::once())->method('fill')->with($invoicePaymentData);
         $invoicePayment->expects(self::once())->method('save');
@@ -92,7 +93,8 @@ class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
         $bitPayConfiguration->expects(self::once())->method('isSignRequest')->willReturn(false);
         $bitPayUpdateMapper->expects(self::once())->method('execute')->willReturn($updatedInvoiceDto);
         $invoiceValidator->expects(self::once())->method('execute');
-        $sendInvoiceEventStream->expects(self::once())->method('execute')->with($invoice);
+        $sendInvoiceEventStream->expects(self::once())->method('execute')
+            ->with($invoice, UpdateInvoiceEventType::ERROR, 'Invoice someId has expired.');
         $client->expects(self::once())->method('getInvoice')->with($bitPayInvoiceId, $facade, false)->willReturn($bitPayInvoice);
         $logger->expects(self::once())->method('info')->with('INVOICE_UPDATE_SUCCESS', self::anything(), self::anything());
 
@@ -105,7 +107,7 @@ class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
             $sendInvoiceEventStream,
             $logger
         );
-        $testedClass->execute($uuid, ['any' => 'data']);
+        $testedClass->execute($uuid, ['any' => 'data', 'event' => 'invoice_expired']);
     }
 
     private function getRepository(): InvoiceRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject

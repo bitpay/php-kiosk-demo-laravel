@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Mercure;
 
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
+use App\Features\Invoice\UpdateInvoice\UpdateInvoiceEventType;
 use App\Models\Invoice\Invoice;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
@@ -21,14 +22,19 @@ class SendMercureUpdateInvoiceEventStream implements SendUpdateInvoiceEventStrea
     /**
      * @throws \JsonException
      */
-    public function execute(Invoice $invoice): void
-    {
+    public function execute(
+        Invoice $invoice,
+        ?UpdateInvoiceEventType $eventType,
+        ?string $eventMessage
+    ): void {
         $this->hub->publish(new Update(
             'update-invoice',
             json_encode(
                 [
                     'status' => $invoice->status,
-                    'uuid' => $invoice->uuid
+                    'uuid' => $invoice->uuid,
+                    'eventType' => strtolower($eventType->name),
+                    'eventMessage' => $eventMessage
                 ],
                 JSON_THROW_ON_ERROR
             )

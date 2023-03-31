@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Http;
 
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
-use App\Http\Services\BitPayClientFactory;
+use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\InvoiceRepositoryInterface;
 use BitPaySDK\Model\Facade;
 use BitPaySDK\Model\Invoice\Invoice;

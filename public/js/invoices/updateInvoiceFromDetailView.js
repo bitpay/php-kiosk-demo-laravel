@@ -14,13 +14,18 @@ class UpdateStatusSse {
 
         eventSource.onmessage = (msg) => {
             const data = JSON.parse(msg.data);
-            let statusTextItem = document.querySelector('[data-uuid="' + data.uuid +'"] .status');
-            if (!statusTextItem) {
-                return;
-            }
-
-            statusTextItem.classList.replace("grid-status-" + statusTextItem.textContent, "grid-status-" + data.status)
-            statusTextItem.textContent = data.status.toLowerCase();
+            addInvoiceSnackBar(data);
+            this.changeValueInView(data);
         }
+    }
+
+    changeValueInView(data) {
+        let statusTextItem = document.querySelector('[data-uuid="' + data.uuid + '"] .status');
+        if (!statusTextItem) {
+            return;
+        }
+
+        statusTextItem.classList.replace("grid-status-" + statusTextItem.textContent, "grid-status-" + data.status)
+        statusTextItem.textContent = data.status.toLowerCase();
     }
 }

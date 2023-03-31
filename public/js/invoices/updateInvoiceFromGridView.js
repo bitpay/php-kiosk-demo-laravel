@@ -15,15 +15,19 @@ class UpdateStatusSse {
 
         eventSource.onmessage = (msg) => {
             const data = JSON.parse(msg.data);
-
-            let selectors = 'tr[data-uuid="' + data.uuid + '"] > .status > span';
-            let statusTextItem = document.querySelector(selectors);
-            if (!statusTextItem) {
-                return;
-            }
-
-            statusTextItem.classList.replace("grid-status-" + statusTextItem.textContent, "grid-status-" + data.status)
-            statusTextItem.textContent = data.status.toLowerCase();
+            addInvoiceSnackBar(data);
+            this.changeValueInGrid(data);
         }
+    }
+
+    changeValueInGrid(data) {
+        let selectors = 'tr[data-uuid="' + data.uuid + '"] > .status > span';
+        let statusTextItem = document.querySelector(selectors);
+        if (!statusTextItem) {
+            return;
+        }
+
+        statusTextItem.classList.replace("grid-status-" + statusTextItem.textContent, "grid-status-" + data.status)
+        statusTextItem.textContent = data.status.toLowerCase();
     }
 }

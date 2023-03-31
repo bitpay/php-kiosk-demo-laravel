@@ -28,12 +28,6 @@
     </div>
 
     <div class="m-auto mt-6 max-w-3xl">
-        @if($errorMessage !== null)
-            <div class="mt-4 bg-red-700">
-                <span>{{ $errorMessage }}</span>
-            </div>
-        @endif
-
         <form action="{{ route('createInvoice', [], false) }}" method="post">
             @csrf
             @foreach($configuration->getDesign()->getPosData()->getFields() as $field)
@@ -93,5 +87,9 @@
                 </div>
         </form>
     </div>
+
+    <script type="text/javascript" src="{{ URL::asset ('js/invoices/invoiceSnackBar.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset ('js/invoices/updateInvoiceFromInvoiceForm.js') }}"></script>
+    <script type="text/javascript">new UpdateInvoiceFromInvoiceForm('{{$sseUrl}}', '{{$sseTopic}}').execute()</script>
 
 @stop

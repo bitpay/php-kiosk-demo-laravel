@@ -28,7 +28,11 @@ class UpdateInvoiceController extends Controller
 
         /** @var array $data */
         $data = $request->request->get('data');
+        $event = $request->request->get('event');
+
         $data['uuid'] = $uuid;
+        $data['event'] = $event['name'] ?? null;
+
         try {
             $this->updateInvoice->execute($uuid, $data);
         } catch (MissingInvoice $e) {
