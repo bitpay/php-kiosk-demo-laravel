@@ -9,8 +9,8 @@ uses an embedded H2 database to make it easy to start. Feel free to use other RD
 ## Functionality
 
 - Create invoices
-- View a grid of invoices
-- View invoice details
+- View a grid of invoices (`/invoices`)
+- View invoice details (`/invoices/:invoiceId`)
 - Store invoices in a database
 - Receives instant payment notifications (IPN) to update the database
 - Uses EventSource to update the frontend upon receiving IPN
@@ -22,21 +22,36 @@ uses an embedded H2 database to make it easy to start. Feel free to use other RD
 
 ## Configuration
 
-This app uses a YAML configuration file. To configure it, you'll need to either
-copy `application-example.yaml` to the `application.yaml` and override specific YAML values.
+### Environment Variables
+
+This app can use either a `.env` file or global environment variables. If you
+would like to use a `.env` file, you will need to copy `.env.example` to `.env`
+and update the values.
+
+By default, this application uses SQLite for demonstration purposes, so you will
+need to set an absolute path for `DB_DATABASE` in your environment.
+
+Note that these are standard Laravel environment variables and may not apply
+to all systems. See the [Laravel documentation](https://laravel.com/docs/10.x/#environment-based-configuration) for more information.
+
+### YAML Configuration
+
+This app uses a YAML configuration file. To configure it, copy
+`application-example.yaml` to the `application.yaml` and override specific YAML
+values.
 
 ### General Information
 
-| YAML Key                                | Description                                             |
-| --------------------------------------- | ------------------------------------------------------- |
-| bitpay.design.hero.bgColor              | CSS color for hero background                           |
-| bitpay.design.hero.title                | The title to show in the hero                           |
-| bitpay.design.hero.body                 | The text to show under the title in the hero            |
-| bitpay.design.logo                      | URL for the logo                                        |
-| bitpay.design.posdata.fields            | See the `POS Data Fields` section below                 |
-| bitpay.token                            | Your BitPay token                                       |
-| bitpay.notificationEmail                | The email you want to use for notifications             |
-| bitpay.environment                      | BitPay environment ( test / prod )                      |
+| YAML Key                     | Description                                  |
+| ---------------------------- | -------------------------------------------- |
+| bitpay.design.hero.bgColor   | CSS color for hero background                |
+| bitpay.design.hero.title     | The title to show in the hero                |
+| bitpay.design.hero.body      | The text to show under the title in the hero |
+| bitpay.design.logo           | URL for the logo                             |
+| bitpay.design.posdata.fields | See the `POS Data Fields` section below      |
+| bitpay.token                 | Your BitPay token                            |
+| bitpay.notificationEmail     | The email you want to use for notifications  |
+| bitpay.environment           | BitPay environment ( test / prod )           |
 
 ### POS Data Fields
 
@@ -90,6 +105,8 @@ copy `application-example.yaml` to the `application.yaml` and override specific 
 - `cp .env.example .env` and configure it
 - `cp application-example.yaml application.yaml` and configure it
 - `php artisan migrate` to run DB migrations (and create sqlite DB if you use this database)
+- `php artisan key:generate` to generate an encryption key
+- `php artisan serve` to run the application
 
 ## Testing
 
