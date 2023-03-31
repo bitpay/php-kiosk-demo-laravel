@@ -9,7 +9,7 @@ use App\Features\Shared\InvoiceSaver;
 use App\Features\Shared\Logger;
 use App\Features\Shared\UrlProvider;
 use App\Features\Shared\UuidFactory;
-use App\Http\Services\BitPayClientFactory;
+use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use BitpaySDK\Exceptions\BitPayException;
 use BitPaySDK\Model\Facade;

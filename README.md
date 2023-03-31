@@ -1,10 +1,10 @@
 # BitPay Kiosk Demo - PHP / Laravel
 
-This is a demonstration Spring Boot app to show how BitPay can be used in the
+This is a demonstration Laravel app to show how BitPay can be used in the
 context of a retail kiosk. It utilizes the the `pos` facade and with a simple
 configuration file you can customize the `posData` fields that are sent to
 BitPay. This app uses Eloquent to manage the database schema and by default
-uses an embedded H2 database to make it easy to start.
+uses an embedded H2 database to make it easy to start. Feel free to use other RDBMS like MySQL.
 
 ## Functionality
 
@@ -89,7 +89,7 @@ copy `application-example.yaml` to the `application.yaml` and override specific 
 - `composer install`
 - `cp .env.example .env` and configure it
 - `cp application-example.yaml application.yaml` and configure it
-- `php artisan migrate` to run DB migrations
+- `php artisan migrate` to run DB migrations (and create sqlite DB if you use this database)
 
 ## Testing
 
@@ -99,5 +99,5 @@ Run `./vendor/bin/phpunit --testsuite=Unit` to run unit tests.
 
 Unit & integration tests:
 
-Create `application-test.yaml` with test configuration (based on application-example.yaml)
-Run `./vendor/bin/phpunit` (they send real requests to the BitPay API so don't use them on prod env).
+Create `application-test.yaml` with test configuration (based on application-example.yaml - they send real requests to the BitPay API so don't use them on prod env)
+Run `./vendor/bin/phpunit`.

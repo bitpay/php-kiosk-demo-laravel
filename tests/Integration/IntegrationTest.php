@@ -20,8 +20,8 @@ class IntegrationTest extends TestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         config(['application-file' => null]);
+
+        parent::tearDown();
     }
 }

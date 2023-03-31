@@ -7,7 +7,7 @@ namespace App\Features\Invoice\UpdateInvoice;
 use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Shared\Exceptions\MissingInvoice;
 use App\Features\Shared\Logger;
-use App\Http\Services\BitPayClientFactory;
+use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\InvoicePaymentCurrency;
@@ -181,7 +181,7 @@ class UpdateInvoiceUsingBitPayIpn
             'invoice_confirmed' => sprintf('Invoice %s has been confirmed.', $invoiceId),
             'invoice_completed' => sprintf('Invoice %s is complete.', $invoiceId),
             'invoice_failedToConfirm' => sprintf('Invoice %s has failed to confirm.', $invoiceId),
-            'invoice_declined' => sprintf('Invoice %s has been declined..', $invoiceId),
+            'invoice_declined' => sprintf('Invoice %s has been declined.', $invoiceId),
             default => null
         };
     }

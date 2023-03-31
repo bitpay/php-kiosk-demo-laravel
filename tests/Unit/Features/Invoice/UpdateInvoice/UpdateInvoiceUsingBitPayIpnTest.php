@@ -13,7 +13,7 @@ use App\Features\Invoice\UpdateInvoice\UpdateInvoiceEventType;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceUsingBitPayIpn;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceValidator;
 use App\Features\Shared\Logger;
-use App\Http\Services\BitPayClientFactory;
+use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\InvoicePaymentCurrency;

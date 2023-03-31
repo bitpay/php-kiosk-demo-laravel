@@ -6,7 +6,7 @@ namespace Tests\Integration\Features\Invoice\UpdateInvoice;
 
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceUsingBitPayIpn;
-use App\Http\Services\BitPayClientFactory;
+use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\InvoiceRepositoryInterface;
 use BitPaySDK\Model\Facade;
 use BitPaySDK\Model\Invoice\Invoice;
