@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace Tests\Integration\Http;
@@ -43,9 +47,12 @@ class UpdateInvoiceTest extends IntegrationTest
         $json = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'updateInvoice.json');
 
         $this->mock(BitPayClientFactory::class, function (MockInterface $mock) {
-            $mock->shouldReceive('create')->andReturn(new class('', '') extends PosClient {
-                public function getInvoice(string $invoiceId, string $facade = Facade::Merchant, bool $signRequest = true): Invoice
-                {
+            $mock->shouldReceive('create')->andReturn(new class ('', '') extends PosClient {
+                public function getInvoice(
+                    string $invoiceId,
+                    string $facade = Facade::Merchant,
+                    bool $signRequest = true
+                ): Invoice {
                     return new Invoice();
                 }
             });
@@ -72,9 +79,12 @@ class UpdateInvoiceTest extends IntegrationTest
         $json = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'updateInvoice.json');
 
         $this->mock(BitPayClientFactory::class, function (MockInterface $mock) {
-            $mock->shouldReceive('create')->andReturn(new class('', '') extends PosClient {
-                public function getInvoice(string $invoiceId, string $facade = Facade::Merchant, bool $signRequest = true): Invoice
-                {
+            $mock->shouldReceive('create')->andReturn(new class ('', '') extends PosClient {
+                public function getInvoice(
+                    string $invoiceId,
+                    string $facade = Facade::Merchant,
+                    bool $signRequest = true
+                ): Invoice {
                     $invoice = new Invoice();
                     $invoice->setId(ExampleInvoice::BITPAY_ID);
                     $invoice->setOrderId(ExampleInvoice::BITPAY_ORDER_ID);
@@ -96,10 +106,13 @@ class UpdateInvoiceTest extends IntegrationTest
 
         // then
         $result->assertStatus(Response::HTTP_NO_CONTENT);
-        $this->assertEquals('expired', $invoice->status);
-        $this->assertEquals(76.7, $invoice->price);
-        $this->assertEquals('https://test.bitpay.com/invoice?id=MV9fy5iNDkqrg4qrfYpw1h', $invoice->bitpay_url); // updated url
-        $this->assertEquals('false', $invoice->exception_status);
-        $this->assertEquals(0, $invoice->getInvoicePayment()->amount_paid);
+        self::assertEquals('expired', $invoice->status);
+        self::assertEquals(76.7, $invoice->price);
+        self::assertEquals(
+            'https://test.bitpay.com/invoice?id=MV9fy5iNDkqrg4qrfYpw1h',
+            $invoice->bitpay_url
+        ); // updated url
+        self::assertEquals('false', $invoice->exception_status);
+        self::assertEquals(0, $invoice->getInvoicePayment()->amount_paid);
     }
 }

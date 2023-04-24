@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace App\Features\Invoice\CreateInvoice;
@@ -56,7 +60,7 @@ class CreateInvoice
             $this->logger->info('INVOICE_CREATE_SUCCESS', 'Successfully created invoice', [
                 'id' => $invoice->id
             ]);
-        } catch (BitPayException|\JsonException $e) {
+        } catch (BitPayException | \JsonException $e) {
             $this->logger->error('INVOICE_CREATE_FAIL', 'Failed to create invoice', [
                 "errorMessage" => $e->getMessage(),
                 "stackTrace" => $e->getTraceAsString()
@@ -135,7 +139,8 @@ class CreateInvoice
      * @return BitPayInvoice
      * @throws \BitpaySDK\Exceptions\BitPayException
      */
-    private function createBitpayInvoice(BitPayInvoice $requestedInvoice): BitPayInvoice {
+    private function createBitpayInvoice(BitPayInvoice $requestedInvoice): BitPayInvoice
+    {
         $client = $this->bitPayClientFactory->create();
 
         $facade = $this->bitPayConfiguration->getFacade();

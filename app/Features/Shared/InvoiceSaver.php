@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace App\Features\Shared;
@@ -116,7 +120,6 @@ class InvoiceSaver
         $invoiceRefund->save();
 
         if ($bitpayRefundInfo->getAmounts()) {
-
             $refundInfoAmounts = [];
             foreach ($bitpayRefundInfo->getAmounts() as $currencyCode => $amount) {
                 $refundInfoAmounts[] = new InvoiceRefundInfoAmount([
@@ -172,7 +175,7 @@ class InvoiceSaver
         $result = [];
         /** @var array $itemizedDetail */
         foreach ($bitPayItemizedDetails as $itemizedDetail) {
-            if (empty($itemizedDetail)) { // @todo will be fixed in SDK
+            if (empty($itemizedDetail)) {
                 continue;
             }
 
@@ -184,7 +187,7 @@ class InvoiceSaver
             $result[] = $invoiceItemizedDetail;
         }
 
-        if (!$result) { // @todo will be fixed in SDK
+        if (!$result) {
             return;
         }
 
@@ -244,7 +247,10 @@ class InvoiceSaver
         $invoicePaymentCurrencies = [];
         foreach ($paymentTotals as $currency => $amount) {
             $invoicePaymentCurrency = $this->getInvoicePaymentCurrency(
-                $bitpayInvoice, $invoicePayment, $currency, $amount
+                $bitpayInvoice,
+                $invoicePayment,
+                $currency,
+                $amount
             );
             $invoicePaymentCurrencies[] = $invoicePaymentCurrency;
         }
@@ -280,7 +286,6 @@ class InvoiceSaver
 
         $bitpayPaymentCodes = $bitpayInvoice->getPaymentCodes()->$currency ?? null;
         if ($bitpayPaymentCodes) {
-
             $invoicePaymentCurrencyCodes = [];
             foreach ($bitpayPaymentCodes as $code => $value) {
                 $invoicePaymentCurrencyCode = new InvoicePaymentCurrencyCode([
@@ -302,6 +307,7 @@ class InvoiceSaver
         return $invoicePaymentCurrency;
     }
 
+    // phpcs:disable Generic.Files.LineLength.TooLong
     private function getSupportedTransactionCurrency(BitPayInvoice $bitpayInvoice, string $currency): ?InvoicePaymentCurrencySupportedTransactionCurrency
     {
         /** @var SupportedTransactionCurrencies|null $bitpaySupportedTransactionCurrency */
@@ -315,7 +321,7 @@ class InvoiceSaver
             return $this->getDefaultSupportedTransactionCurrency();
         }
 
-        /** @var SupportedTransactionCurrency|null $bitpayMinerFee */
+        /** @var SupportedTransactionCurrency|null $bitpaySupportedTransactionCurrency */
         $bitpaySupportedTransactionCurrency = $bitpaySupportedTransactionCurrencies->{$methodName}();
 
         if (!$bitpaySupportedTransactionCurrency) {
@@ -425,7 +431,7 @@ class InvoiceSaver
         foreach ($bitpayTransactions as $bitpayTransaction) {
             $transaction = new InvoiceTransaction([
                 'amount' => $bitpayTransaction['amount'] ?? null,
-                'confirmations'=> $bitpayTransaction['confirmations'] ?? null,
+                'confirmations' => $bitpayTransaction['confirmations'] ?? null,
                 'received_time' => $bitpayTransaction['receivedTime']
                     ? new \DateTimeImmutable($bitpayTransaction['receivedTime']) : null,
                 'txid' => $bitpayTransaction['txid'] ?? null,

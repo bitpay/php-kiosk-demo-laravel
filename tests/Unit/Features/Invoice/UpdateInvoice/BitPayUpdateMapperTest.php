@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace Tests\Unit\Features\Invoice\UpdateInvoice;
@@ -95,8 +99,8 @@ class BitPayUpdateMapperTest extends TestCase
             ],
             'bitpay_order_id' => '640f27154e58f8.40716035',
             'created_date' => DateTimeImmutableCreator::fromTimestamp(1678714659517),
-            'buyer_fields' => [], // todo,
-            'exchange_rates' => [], // todo,
+            'buyer_fields' => [],
+            'exchange_rates' => [],
         ];
         self::assertEquals($expected, $mappedData->toArray());
     }

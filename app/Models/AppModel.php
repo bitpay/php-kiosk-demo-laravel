@@ -10,7 +10,10 @@ class AppModel extends Model
 {
     public $timestamps = false;
 
-    protected function getDateTimeImmutable($value)
+    /**
+     * @throws \Exception
+     */
+    protected function getDateTimeImmutable($value): ?\DateTimeImmutable
     {
         if ($value === null) {
             return null;
