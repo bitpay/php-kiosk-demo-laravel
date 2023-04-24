@@ -33,12 +33,12 @@ jobs:
           version: 9
       - name: PHPUnit Integration Tests
         uses: php-actions/phpunit@v3
-          with:
-            configuration: phpunit.xml
-            php_version: ${{ matrix.php-version }}
-            php_extensions: bcmath gmp xdebug
-            testsuite: Integration
-            version: 9
+        with:
+          configuration: phpunit.xml
+          php_version: ${{ matrix.php-version }}
+          php_extensions: bcmath gmp xdebug
+          testsuite: Integration
+          version: 9
   phpcs:
     runs-on: ubuntu-latest
 
