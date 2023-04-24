@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Http;
+namespace Tests\Functional\Http;
 
 use App\Models\Invoice\InvoiceRepositoryInterface;
 use Tests\Integration\IntegrationTest;
@@ -30,13 +30,13 @@ class CreateInvoiceTest extends IntegrationTest
         $invoiceRepository = $this->app->make(InvoiceRepositoryInterface::class);
         $invoice = $invoiceRepository->findOne(1);
 
-        $this->assertNotNull($invoice);
-        $this->assertNotNull($invoice->bitpay_id);
-        $this->assertNotNull($invoice->bitpay_order_id);
-        $this->assertEquals(
+        self::assertNotNull($invoice);
+        self::assertNotNull($invoice->bitpay_id);
+        self::assertNotNull($invoice->bitpay_order_id);
+        self::assertEquals(
             '{"store":"store-1","register":"2","reg_transaction_no":"test123","price":"23.54"}',
             $invoice->pos_data_json
         );
-        $this->assertEquals(23.54, $invoice->price);
+        self::assertEquals(23.54, $invoice->price);
     }
 }

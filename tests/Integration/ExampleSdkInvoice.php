@@ -21,14 +21,14 @@ use BitPaySDK\Model\Invoice\UniversalCodes;
 
 class ExampleSdkInvoice
 {
-    public function get(): Invoice
+    public static function create(): Invoice
     {
         $invoice = new Invoice();
         $invoice->setCurrency('USD');
         $invoice->setGuid('payment#1234');
         $invoice->setToken('8nPJSGgi7omxcbGGZ4KsSgqdi6juypBe9pVpSURDeAwx4VDQx1XfWPy5qqknDKT9KQ');
-        $invoice->setPrice(20.0);
-        $invoice->setPosData('{ "ref" : 711454, "item" : "test_item" }');
+        $invoice->setPrice(23.54);
+        $invoice->setPosData('{"store":"store-1","register":"2","reg_transaction_no":"test123","price":"23.54"}');
         $invoice->setNotificationURL('http://test.com');
         $invoice->setTransactionSpeed('medium');
         $invoice->setFullNotifications(true);
@@ -50,7 +50,7 @@ class ExampleSdkInvoice
         $invoice->setInvoiceTime(1620734545366);
         $invoice->setExpirationTime('1620734880748');
         $invoice->setCurrentTime('1620733980807');
-        $invoice->setTransactions($this->getTransactions());
+        $invoice->setTransactions(self::getTransactions());
         $invoice->setExceptionStatus(false);
         $invoice->setTargetConfirmations(6);
         $invoice->setRefundAddressRequestPending(false);
@@ -59,7 +59,7 @@ class ExampleSdkInvoice
         $invoice->setExtendedNotifications(true);
         $invoice->setTransactionCurrency('BTC');
         $invoice->setAmountPaid(12);
-        $invoice->setExchangeRates($this->getExampleExchangeRates());
+        $invoice->setExchangeRates(self::getExampleExchangeRates());
         $invoice->setMerchantName('Merchant name');
         $invoice->setSelectedTransactionCurrency('BTC');
         $invoice->setBitpayIdRequired(true);
@@ -146,20 +146,20 @@ class ExampleSdkInvoice
         $paymentCodes->BTC = $paymentCodeBtc;
         $invoice->setPaymentCodes($paymentCodes);
 
-        $invoice->setBuyerProvidedInfo($this->getBuyerProvidedInfo());
-        $invoice->setTransactionDetails($this->getTransactionDetails());
-        $invoice->setUniversalCodes($this->getUniversalCodes());
-        $invoice->setSupportedTransactionCurrencies($this->getSupportedTransactionCurrencies());
-        $invoice->setMinerFees($this->getMinerFees());
-        $invoice->setShopper($this->getShopper());
-        $invoice->setRefundInfo($this->getRefundInfo());
-        $invoice->setExchangeRates($this->getExchangeRates());
+        $invoice->setBuyerProvidedInfo(self::getBuyerProvidedInfo());
+        $invoice->setTransactionDetails(self::getTransactionDetails());
+        $invoice->setUniversalCodes(self::getUniversalCodes());
+        $invoice->setSupportedTransactionCurrencies(self::getSupportedTransactionCurrencies());
+        $invoice->setMinerFees(self::getMinerFees());
+        $invoice->setShopper(self::getShopper());
+        $invoice->setRefundInfo(self::getRefundInfo());
+        $invoice->setExchangeRates(self::getExchangeRates());
         $invoice->setUrl('https://test.bitpay.com/invoice?id=YUVJ8caCU1DLnUoc4nug4iN');
 
         return $invoice;
     }
 
-    private function getBuyerProvidedInfo(): BuyerProvidedInfo
+    private static function getBuyerProvidedInfo(): BuyerProvidedInfo
     {
         $info = new BuyerProvidedInfo();
         $info->setName('someName');
@@ -173,7 +173,7 @@ class ExampleSdkInvoice
         return $info;
     }
 
-    private function getTransactionDetails(): TransactionDetails
+    private static function getTransactionDetails(): TransactionDetails
     {
         $transactionDetails = new TransactionDetails();
         $transactionDetails->setAmount(12.2);
@@ -183,7 +183,7 @@ class ExampleSdkInvoice
         return $transactionDetails;
     }
 
-    private function getExampleExchangeRates(): array
+    private static function getExampleExchangeRates(): array
     {
         return [
             "BTC" => [
@@ -332,7 +332,7 @@ class ExampleSdkInvoice
         ];
     }
 
-    private function getUniversalCodes(): UniversalCodes
+    private static function getUniversalCodes(): UniversalCodes
     {
         $universalCodes = new UniversalCodes();
         $universalCodes->setPaymentString('https://link.bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH');
@@ -341,7 +341,7 @@ class ExampleSdkInvoice
         return $universalCodes;
     }
 
-    private function getSupportedTransactionCurrencies(): SupportedTransactionCurrencies
+    private static function getSupportedTransactionCurrencies(): SupportedTransactionCurrencies
     {
         $supportedTransactionCurrencies = new SupportedTransactionCurrencies();
         $btc = new SupportedTransactionCurrency();
@@ -352,7 +352,7 @@ class ExampleSdkInvoice
         return $supportedTransactionCurrencies;
     }
 
-    private function getMinerFees(): MinerFees
+    private static function getMinerFees(): MinerFees
     {
         $minerFees = new MinerFees();
         $item = new MinerFeesItem();
@@ -365,7 +365,7 @@ class ExampleSdkInvoice
         return $minerFees;
     }
 
-    private function getShopper(): Shopper
+    private static function getShopper(): Shopper
     {
         $shopper = new Shopper();
         $shopper->setUser('someUser');
@@ -373,7 +373,7 @@ class ExampleSdkInvoice
         return $shopper;
     }
 
-    private function getRefundInfo(): RefundInfo
+    private static function getRefundInfo(): RefundInfo
     {
         $refundInfo = new RefundInfo();
         $refundInfo->setAmounts([
@@ -385,7 +385,7 @@ class ExampleSdkInvoice
         return $refundInfo;
     }
 
-    private function getExchangeRates(): \stdClass
+    private static function getExchangeRates(): \stdClass
     {
         $exchangeRates = new \stdClass();
         $btc = new \stdClass();
@@ -408,7 +408,7 @@ class ExampleSdkInvoice
         return $exchangeRates;
     }
 
-    private function getTransactions(): array
+    private static function getTransactions(): array
     {
         return [
             [
