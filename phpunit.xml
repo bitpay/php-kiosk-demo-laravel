@@ -44,5 +44,6 @@
         <env name="MERCURE_PUBLISHER_PUBLISHER_URL" value="anyString"/>
         <env name="MERCURE_PUBLISHER_JWT_KEY" value="anyString"/>
         <env name="MERCURE_PUBLISHER_SUBSCRIBER_URL" value="anyString"/>
+        <env name="APP_KEY" value="base64:drHh6HGggsxa+B5ARY+iWYZ//7x3MCCTN4Q4lL27uaY="/>
     </php>
 </phpunit>
