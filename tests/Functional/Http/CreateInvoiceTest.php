@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace Tests\Functional\Http;
 
 use App\Models\Invoice\InvoiceRepositoryInterface;
-use Tests\Integration\IntegrationTest;
+use Tests\Functional\AbstractFunctionalTest;
 
-class CreateInvoiceTest extends IntegrationTest
+class CreateInvoiceTest extends AbstractFunctionalTest
 {
     /**
      * @test
