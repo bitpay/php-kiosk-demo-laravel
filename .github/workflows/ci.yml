@@ -1,4 +1,4 @@
-name: Test
+name: CI
 
 on:
   pull_request:
@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: php-actions/composer@v5
+      - uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php-version }}
           args: --ignore-platform-reqs
@@ -42,11 +42,15 @@ jobs:
   phpcs:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        php-version: [ 8.0, 8.1, 8.2 ]
+
     steps:
       - uses: actions/checkout@v3
-      - uses: php-actions/composer@v5
+      - uses: php-actions/composer@v6
         with:
-          php_version: 8.1
+          php_version: ${{ matrix.php-version }}
           php_extensions: bcmath gmp xdebug
       - name: Install PHP_CodeSniffer
         run: |
