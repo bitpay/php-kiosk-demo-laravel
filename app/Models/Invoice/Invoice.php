@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace App\Models\Invoice;
@@ -50,7 +54,7 @@ class Invoice extends AppModel
 {
     use HasFactory;
 
-    protected $table ='invoice';
+    protected $table = 'invoice';
 
     protected $cast = [
         'acceptance_window' => 'boolean',

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace Tests\Unit\Features\Invoice\UpdateInvoice;
@@ -20,6 +24,7 @@ use App\Models\Invoice\InvoicePaymentCurrency;
 use App\Models\Invoice\InvoiceRepositoryInterface;
 use BitPaySDK\Client;
 use Illuminate\Database\Eloquent\Collection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\AbstractUnitTest;
 
 class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
@@ -62,7 +67,8 @@ class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
         $invoice = $this->getMockBuilder(Invoice::class)->disableOriginalConstructor()->getMock();
         $invoicePayment = $this->getMockBuilder(InvoicePayment::class)->disableOriginalConstructor()->getMock();
         $invoicePaymentData = ['amount_paid' => 5];
-        $invoicePaymentCurrency = $this->getMockBuilder(InvoicePaymentCurrency::class)->disableOriginalConstructor()->getMock();
+        $invoicePaymentCurrency = $this->getMockBuilder(InvoicePaymentCurrency::class)
+            ->disableOriginalConstructor()->getMock();
         $invoicePaymentCurrency->method('getCurrencyCode')->willReturn('BTC');
         $invoicePaymentCurrencyBtcData = [
             'currency_code' => 'BTC',
@@ -86,7 +92,8 @@ class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
         $invoice->expects(self::exactly(2))->method('getInvoicePayment')->willReturn($invoicePayment);
         $invoicePayment->expects(self::once())->method('fill')->with($invoicePaymentData);
         $invoicePayment->expects(self::once())->method('save');
-        $invoicePayment->expects(self::once())->method('getPaymentCurrencies')->willReturn(new Collection([$invoicePaymentCurrency]));
+        $invoicePayment->expects(self::once())->method('getPaymentCurrencies')
+            ->willReturn(new Collection([$invoicePaymentCurrency]));
         $invoicePaymentCurrency->expects(self::once())->method('fill')->with($invoicePaymentCurrencyBtcData);
         $invoicePaymentCurrency->expects(self::once())->method('save');
         $bitPayConfiguration->expects(self::once())->method('getFacade')->willReturn($facade . '');
@@ -95,8 +102,10 @@ class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
         $invoiceValidator->expects(self::once())->method('execute');
         $sendInvoiceEventStream->expects(self::once())->method('execute')
             ->with($invoice, UpdateInvoiceEventType::ERROR, 'Invoice someId has expired.');
-        $client->expects(self::once())->method('getInvoice')->with($bitPayInvoiceId, $facade, false)->willReturn($bitPayInvoice);
-        $logger->expects(self::once())->method('info')->with('INVOICE_UPDATE_SUCCESS', self::anything(), self::anything());
+        $client->expects(self::once())->method('getInvoice')->with($bitPayInvoiceId, $facade, false)
+            ->willReturn($bitPayInvoice);
+        $logger->expects(self::once())->method('info')
+            ->with('INVOICE_UPDATE_SUCCESS', self::anything(), self::anything());
 
         $testedClass = new UpdateInvoiceUsingBitPayIpn(
             $repository,
@@ -110,37 +119,37 @@ class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTest
         $testedClass->execute($uuid, ['any' => 'data', 'event' => 'invoice_expired']);
     }
 
-    private function getRepository(): InvoiceRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
+    private function getRepository(): InvoiceRepositoryInterface|MockObject
     {
         return $this->createMock(InvoiceRepositoryInterface::class);
     }
 
-    private function getClientFactory(): \PHPUnit\Framework\MockObject\MockObject|BitPayClientFactory
+    private function getClientFactory(): MockObject|BitPayClientFactory
     {
         return $this->createMock(BitPayClientFactory::class);
     }
 
-    private function getBitPayConfiguration(): \PHPUnit\Framework\MockObject\MockObject|BitPayConfigurationInterface
+    private function getBitPayConfiguration(): MockObject|BitPayConfigurationInterface
     {
         return $this->createMock(BitPayConfigurationInterface::class);
     }
 
-    private function getInvoiceValidator(): UpdateInvoiceValidator|\PHPUnit\Framework\MockObject\MockObject
+    private function getInvoiceValidator(): UpdateInvoiceValidator|MockObject
     {
         return $this->createMock(UpdateInvoiceValidator::class);
     }
 
-    private function getSendUpdateInvoiceEventStream(): SendUpdateInvoiceEventStream|\PHPUnit\Framework\MockObject\MockObject
+    private function getSendUpdateInvoiceEventStream(): SendUpdateInvoiceEventStream|MockObject
     {
         return $this->createMock(SendUpdateInvoiceEventStream::class);
     }
 
-    private function getLogger(): Logger|\PHPUnit\Framework\MockObject\MockObject
+    private function getLogger(): Logger|MockObject
     {
         return $this->createMock(Logger::class);
     }
 
-    private function getUpdateMapper(): \PHPUnit\Framework\MockObject\MockObject|BitPayUpdateMapper
+    private function getUpdateMapper(): MockObject|BitPayUpdateMapper
     {
         return $this->createMock(BitPayUpdateMapper::class);
     }

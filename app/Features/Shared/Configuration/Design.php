@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace App\Features\Shared\Configuration;
@@ -7,7 +11,7 @@ namespace App\Features\Shared\Configuration;
 class Design
 {
     private Hero $hero;
-    private String $logo;
+    private string $logo;
     private PosData $posData;
 
     /**
@@ -46,6 +50,4 @@ class Design
     {
         return $this->posData;
     }
-
-
 }

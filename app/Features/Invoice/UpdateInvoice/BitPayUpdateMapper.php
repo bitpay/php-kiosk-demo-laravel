@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace App\Features\Invoice\UpdateInvoice;
@@ -55,7 +59,6 @@ class BitPayUpdateMapper
             $paymentSubtotal = $paymentSubtotals[$currency] ?? null;
             if ($paymentSubtotal !== null) {
                 $invoicePaymentCurrencies[$currency]['subtotal'] = $paymentSubtotal;
-
             }
         }
         $result = [];

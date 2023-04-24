@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace App\Features\Invoice\UpdateInvoice;
@@ -61,7 +65,7 @@ class UpdateInvoiceUsingBitPayIpn
             $this->updateInvoice($invoice, $updateInvoiceData);
 
             $this->sendUpdateInvoiceEventStream($invoice, $data);
-        } catch (\Exception|\TypeError $e) {
+        } catch (\Exception | \TypeError $e) {
             $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
                 'id' => $invoice->id
             ]);
@@ -174,7 +178,7 @@ class UpdateInvoiceUsingBitPayIpn
 
     private function getEventMessageFromEventName(string $invoiceId, ?string $eventName): ?string
     {
-        return match($eventName) {
+        return match ($eventName) {
             null, 'invoice_manuallyNotified', 'invoice_refundComplete' => null,
             'invoice_paidInFull' => sprintf('Invoice %s has been paid in full.', $invoiceId),
             'invoice_expired' => sprintf('Invoice %s has expired.', $invoiceId),

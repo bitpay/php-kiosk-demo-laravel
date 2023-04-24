@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 namespace App\Infrastructure\Laravel;
 
 use App\Features\Shared\Configuration\BitPayConfigurationFactoryInterface;
@@ -64,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             HubInterface::class,
-            function() {
+            function () {
                 return new Hub(
                     env('MERCURE_PUBLISHER_PUBLISHER_URL'),
                     new StaticTokenProvider(env('MERCURE_PUBLISHER_JWT_KEY')),
@@ -81,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             UpdateInvoiceIpnValidator::class,
-            function() {
+            function () {
                 return new UpdateInvoiceIpnValidator(
                     $this->app->make(BaseUpdateInvoiceValidator::class),
                     $this->app->make(Logger::class)
@@ -96,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             SerializerInterface::class,
-            function() {
+            function () {
                 $phpDocExtractor = new PhpDocExtractor();
                 $typeExtractor   = new PropertyInfoExtractor(
                     typeExtractors: [ new ConstructorExtractor([$phpDocExtractor]), $phpDocExtractor,]

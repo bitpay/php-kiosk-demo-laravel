@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2019 BitPay
+ **/
+
 declare(strict_types=1);
 
 namespace Tests\Unit\Features\Invoice\CreateInvoice;
@@ -24,6 +28,7 @@ class CreateInvoiceTest extends AbstractUnitTest
 {
     /**
      * @test
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function it_should_throws_exception_for_missing_value_for_required_field(): void
     {
@@ -31,7 +36,13 @@ class CreateInvoiceTest extends AbstractUnitTest
         $posData = new PosData();
         $posData->setFields([]);
         $design = new Design($hero, 'someLogo', $posData);
-        $bitPayConfiguration = new BitPayConfiguration('pos', 'test', $design, 'someToken', 'someNotification@email.com');
+        $bitPayConfiguration = new BitPayConfiguration(
+            'pos',
+            'test',
+            $design,
+            'someToken',
+            'someNotification@email.com'
+        );
         $bitPayClientFactory = $this->createMock(BitPayClientFactory::class);
         $invoiceSaver = $this->createMock(InvoiceSaver::class);
         $uuidFactory = $this->createMock(UuidFactory::class);
@@ -69,7 +80,13 @@ class CreateInvoiceTest extends AbstractUnitTest
         $posData = new PosData();
         $posData->setFields([$priceField]);
         $design = new Design($hero, 'someLogo', $posData);
-        $bitPayConfiguration = new BitPayConfiguration('pos', 'test', $design, 'someToken', 'someNotification@email.com');
+        $bitPayConfiguration = new BitPayConfiguration(
+            'pos',
+            'test',
+            $design,
+            'someToken',
+            'someNotification@email.com'
+        );
         $bitPayClientFactory = $this->createMock(BitPayClientFactory::class);
         $invoiceSaver = $this->createMock(InvoiceSaver::class);
         $uuidFactory = $this->createMock(UuidFactory::class);
@@ -107,7 +124,13 @@ class CreateInvoiceTest extends AbstractUnitTest
         $posData = new PosData();
         $posData->setFields([$priceField]);
         $design = new Design($hero, 'someLogo', $posData);
-        $bitPayConfiguration = new BitPayConfiguration('pos', 'test', $design, 'someToken', 'someNotification@email.com');
+        $bitPayConfiguration = new BitPayConfiguration(
+            'pos',
+            'test',
+            $design,
+            'someToken',
+            'someNotification@email.com'
+        );
         $bitPayClient = $this->createMock(Client::class);
         $bitPayClientFactory = $this->createMock(BitPayClientFactory::class);
         $invoiceSaver = $this->createMock(InvoiceSaver::class);
@@ -153,7 +176,13 @@ class CreateInvoiceTest extends AbstractUnitTest
         $posData = new PosData();
         $posData->setFields([$priceField]);
         $design = new Design($hero, 'someLogo', $posData);
-        $bitPayConfiguration = new BitPayConfiguration('pos', 'test', $design, 'someToken', 'someNotification@email.com');
+        $bitPayConfiguration = new BitPayConfiguration(
+            'pos',
+            'test',
+            $design,
+            'someToken',
+            'someNotification@email.com'
+        );
         $bitPayClient = $this->createMock(Client::class);
         $bitPayClientFactory = $this->createMock(BitPayClientFactory::class);
         $invoiceSaver = $this->createMock(InvoiceSaver::class);
@@ -186,6 +215,6 @@ class CreateInvoiceTest extends AbstractUnitTest
             'price' => '23.54'
         ];
         $result = $createInvoice->execute($params);
-        $this->assertEquals($appInvoice, $result);
+        self::assertEquals($appInvoice, $result);
     }
 }
