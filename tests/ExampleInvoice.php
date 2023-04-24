@@ -24,6 +24,7 @@ class ExampleInvoice
     public static function create(): Invoice
     {
         $invoice = new Invoice();
+        $invoice->created_date = new \DateTime('2023-01-22');
         $invoice->uuid = self::UUID;
         $invoice->price = 12.35;
         $invoice->token = self::TOKEN;

@@ -114,7 +114,11 @@ Unit tests:
 
 Run `./vendor/bin/phpunit --testsuite=Unit` to run unit tests.
 
-Unit & integration tests:
+Integration tests:
 
-Create `application-test.yaml` with test configuration (based on application-example.yaml - they send real requests to the BitPay API so don't use them on prod env)
-Run `./vendor/bin/phpunit`.
+Run `./vendor/bin/phpunit --testsuite=Integration` to run integration tests.
+
+Functional tests:
+
+Create `application-functional.yaml` with test configuration (based on application-example.yaml - they send real requests to the BitPay API so don't use them on prod env)
+Run `./vendor/bin/phpunit --testsuite=Functional`.

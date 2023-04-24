@@ -24,7 +24,7 @@ class GetInvoiceViewControllerTest extends IntegrationTest
         $result = $this->get('/invoices/' . $invoice->id);
         $result->assertSeeText(ExampleInvoice::BITPAY_ID);
         $result->assertSeeText($invoice->price);
-        $result->assertSeeText($invoice->item_description);
+        $result->assertSeeText($invoice->bitpay_order_id);
         $result->assertSeeText($invoice->status);
     }
 

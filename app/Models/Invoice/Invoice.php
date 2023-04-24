@@ -123,20 +123,12 @@ class Invoice extends AppModel
 
     public function getCreatedDateAttribute($value)
     {
-        if ($value instanceof \DateTimeImmutable) {
-            return $value;
-        }
-
-        return new \DateTimeImmutable($value);
+        return $this->getDateTimeImmutable($value);
     }
 
     public function getExpirationTimeAttribute($value)
     {
-        if ($value instanceof \DateTimeImmutable) {
-            return $value;
-        }
-
-        return new \DateTimeImmutable($value);
+        return $this->getDateTimeImmutable($value);
     }
 
     public function getInvoicePayment(): ?InvoicePayment

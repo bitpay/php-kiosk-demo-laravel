@@ -11,7 +11,7 @@
 .env.production
 .phpunit.result.cache
 application.yaml
-application-test.yaml
+application-functional.yaml
 Homestead.json
 Homestead.yaml
 auth.json

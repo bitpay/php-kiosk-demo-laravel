@@ -26,7 +26,7 @@ class InvoiceSaverTest extends TestCase
      */
     public function it_should_save_bitpay_invoice_to_db(): void
     {
-        $bitpayInvoice = (new ExampleSdkInvoice())->get();
+        $bitpayInvoice = ExampleSdkInvoice::create();
         $uuid = '1234';
         $applicationInvoice = $this->getTestedClass()->fromSdkModel($bitpayInvoice, $uuid);
 
@@ -36,7 +36,7 @@ class InvoiceSaverTest extends TestCase
         $invoiceBuyer = $applicationInvoice->getInvoiceBuyer();
         $invoiceBuyerProvidedInfo = $invoiceBuyer->getInvoiceBuyerProvidedInfo();
         $invoiceRefund = $applicationInvoice->getInvoiceRefund();
-        $refundInfo = $invoiceRefund->getInvoiceRefundInfo();
+        $invoiceRefundInfo = $invoiceRefund->getInvoiceRefundInfo();
 
         Assert::assertEquals($uuid, $applicationInvoice->uuid);
         Assert::assertEquals($bitpayInvoice->getCurrency(), $applicationInvoice->currency_code);
@@ -149,12 +149,12 @@ class InvoiceSaverTest extends TestCase
         Assert::assertEquals($minerFeesItemBtc->getFiatAmount(), $btcPaymentCurrency->getMinerFee()->fiat_amount);
         Assert::assertEquals($minerFeesItemBtc->getTotalFee(), $btcPaymentCurrency->getMinerFee()->total_fee);
         Assert::assertEquals($bitpayInvoice->getShopper()->getUser(), $applicationInvoice->shopper_user);
-        Assert::assertEquals($refundInfo->getCurrency(), $refundInfo->currency_code);
+        Assert::assertEquals($bitpayInvoice->getRefundInfo()->getCurrency(), $invoiceRefundInfo->currency_code);
         Assert::assertEquals(
-            $refundInfo->getAmounts()['BTC'],
-            $refundInfo->invoiceRefundInfoAmounts()->where('currency_code', 'BTC')->first()->amount
+            $bitpayInvoice->getRefundInfo()->getAmounts()['BTC'],
+            $invoiceRefundInfo->invoiceRefundInfoAmounts()->where('currency_code', 'BTC')->first()->amount
         );
-        Assert::assertEquals($refundInfo->getSupportRequest(), $refundInfo->support_request);
+        Assert::assertEquals($bitpayInvoice->getRefundInfo()->getSupportRequest(), $invoiceRefundInfo->support_request);
         Assert::assertEquals($bitpayInvoice->getExchangeRates()->BTC->USD, $exchangeRateBtcUsd->rate);
         Assert::assertEquals($bitpayInvoice->getUrl(), $applicationInvoice->bitpay_url);
         Assert::assertEquals(
