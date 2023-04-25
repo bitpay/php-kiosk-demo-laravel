@@ -10,9 +10,9 @@ namespace Tests\Unit\Features\Invoice\UpdateInvoice;
 
 use App\Shared\Exceptions\ValidationFailed;
 use App\Features\Invoice\UpdateInvoice\BaseUpdateInvoiceValidator;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class BaseUpdateInvoiceValidatorTest extends AbstractUnitTest
+class BaseUpdateInvoiceValidatorTestCase extends AbstractUnitTestCase
 {
     /**
      * @test

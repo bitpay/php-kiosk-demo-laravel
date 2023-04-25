@@ -13,9 +13,9 @@ use App\Features\Invoice\UpdateInvoice\UpdateInvoiceIpnValidator;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceValidator;
 use App\Features\Shared\Logger;
 use BitPaySDK\Model\Invoice\Invoice;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class UpdateInvoiceIpnValidatorTest extends AbstractUnitTest
+class UpdateInvoiceIpnValidatorTestCase extends AbstractUnitTestCase
 {
     /**
      * @test

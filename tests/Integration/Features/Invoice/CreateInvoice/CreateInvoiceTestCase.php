@@ -17,9 +17,9 @@ use BitPaySDK\PosClient;
 use Mockery\MockInterface;
 use Tests\ExampleInvoice;
 use Tests\Integration\ExampleSdkInvoice;
-use Tests\Integration\IntegrationTest;
+use Tests\Integration\IntegrationTestCase;
 
-class CreateInvoiceTest extends IntegrationTest
+class CreateInvoiceTestCase extends IntegrationTestCase
 {
     /**
      * @test

@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Http;
 
 use Tests\ExampleInvoice;
-use Tests\Integration\IntegrationTest;
+use Tests\Integration\IntegrationTestCase;
 
-class GetInvoicesControllerTest extends IntegrationTest
+class GetInvoicesControllerTestCase extends IntegrationTestCase
 {
     /**
      * @test

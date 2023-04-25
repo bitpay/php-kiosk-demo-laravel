@@ -11,9 +11,9 @@ namespace Tests\Unit\Configuration;
 use App\Features\Shared\Configuration\Design;
 use App\Features\Shared\Configuration\Hero;
 use App\Features\Shared\Configuration\PosData;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class DesignTest extends AbstractUnitTest
+class DesignTestCase extends AbstractUnitTestCase
 {
     /**
      * @test

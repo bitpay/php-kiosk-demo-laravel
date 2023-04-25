@@ -2,10 +2,10 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
             <div class="flex">
-                <div class="flex flex-shrink-0 items-center">
+                <a href="/" class="flex flex-shrink-0 items-center">
                     <img class="block h-8 w-auto lg:hidden" src="{{ $configuration->getDesign()->getLogo() }}">
                     <img class="hidden h-8 w-auto lg:block" src="{{ $configuration->getDesign()->getLogo() }}">
-                </div>
+                </a>
                 <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                     <a href="/invoices" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" aria-current="page">Invoices</a>
                 </div>
