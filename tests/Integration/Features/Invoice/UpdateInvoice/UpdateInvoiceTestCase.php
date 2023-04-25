@@ -18,9 +18,9 @@ use BitPaySDK\PosClient;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Assert;
 use Tests\ExampleInvoice;
-use Tests\Integration\IntegrationTest;
+use Tests\Integration\IntegrationTestCase;
 
-class UpdateInvoiceTest extends IntegrationTest
+class UpdateInvoiceTestCase extends IntegrationTestCase
 {
     /**
      * @test

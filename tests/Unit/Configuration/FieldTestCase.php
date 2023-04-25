@@ -10,9 +10,9 @@ namespace Tests\Unit\Configuration;
 
 use App\Features\Shared\Configuration\Field;
 use App\Features\Shared\Configuration\Option;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class FieldTest extends AbstractUnitTest
+class FieldTestCase extends AbstractUnitTestCase
 {
     /**
      * @test

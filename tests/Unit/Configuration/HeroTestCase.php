@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Configuration;
 
 use App\Features\Shared\Configuration\Hero;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class HeroTest extends AbstractUnitTest
+class HeroTestCase extends AbstractUnitTestCase
 {
     /**
      * @test

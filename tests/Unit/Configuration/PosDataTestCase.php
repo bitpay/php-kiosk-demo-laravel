@@ -10,9 +10,9 @@ namespace Tests\Unit\Configuration;
 
 use App\Features\Shared\Configuration\Field;
 use App\Features\Shared\Configuration\PosData;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class PosDataTest extends AbstractUnitTest
+class PosDataTestCase extends AbstractUnitTestCase
 {
     /**
      * @test

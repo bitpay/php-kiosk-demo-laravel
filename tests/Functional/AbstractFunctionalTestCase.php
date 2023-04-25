@@ -6,12 +6,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration;
+namespace Tests\Functional;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class IntegrationTest extends TestCase
+abstract class AbstractFunctionalTestCase extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,7 +19,7 @@ class IntegrationTest extends TestCase
     {
         parent::setUp();
 
-        config(['application-file' => 'application-example.yaml']);
+        config(['application-file' => 'application-functional.yaml']);
     }
 
     public function tearDown(): void

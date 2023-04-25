@@ -22,9 +22,9 @@ use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use BitPaySDK\Client;
 use BitPaySDK\Exceptions\BitPayException;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class CreateInvoiceTest extends AbstractUnitTest
+class CreateInvoiceTestCase extends AbstractUnitTestCase
 {
     /**
      * @test

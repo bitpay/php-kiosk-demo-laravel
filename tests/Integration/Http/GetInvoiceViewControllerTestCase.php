@@ -10,9 +10,9 @@ namespace Tests\Integration\Http;
 
 use Symfony\Component\HttpFoundation\Response;
 use Tests\ExampleInvoice;
-use Tests\Integration\IntegrationTest;
+use Tests\Integration\IntegrationTestCase;
 
-class GetInvoiceViewControllerTest extends IntegrationTest
+class GetInvoiceViewControllerTestCase extends IntegrationTestCase
 {
     /**
      * @test

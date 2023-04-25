@@ -20,10 +20,10 @@ use App\Models\Invoice\InvoiceRepositoryInterface;
 class UpdateInvoiceUsingBitPayIpn
 {
     private InvoiceRepositoryInterface $invoiceRepository;
-    private SendUpdateInvoiceEventStream $sendUpdateInvoiceEventStream;
     private BitPayUpdateMapper $bitPayUpdateMapper;
     private BitPayClientFactory $bitPayClientFactory;
     private BitPayConfigurationInterface $bitPayConfiguration;
+    private SendUpdateInvoiceNotification $sendUpdateInvoiceNotification;
     private Logger $logger;
     private UpdateInvoiceValidator $updateInvoiceValidator;
 
@@ -33,13 +33,13 @@ class UpdateInvoiceUsingBitPayIpn
         BitPayClientFactory $bitPayClientFactory,
         BitPayConfigurationInterface $bitPayConfiguration,
         UpdateInvoiceValidator $updateInvoiceValidator,
-        SendUpdateInvoiceEventStream $sendUpdateInvoiceEventStream,
+        SendUpdateInvoiceNotification $sendUpdateInvoiceNotification,
         Logger $logger
     ) {
         $this->invoiceRepository = $invoiceRepository;
         $this->bitPayUpdateMapper = $bitPayUpdateMapper;
         $this->bitPayClientFactory = $bitPayClientFactory;
-        $this->sendUpdateInvoiceEventStream = $sendUpdateInvoiceEventStream;
+        $this->sendUpdateInvoiceNotification = $sendUpdateInvoiceNotification;
         $this->logger = $logger;
         $this->updateInvoiceValidator = $updateInvoiceValidator;
         $this->bitPayConfiguration = $bitPayConfiguration;
@@ -62,9 +62,10 @@ class UpdateInvoiceUsingBitPayIpn
 
             $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
             $this->updateInvoiceValidator->execute($data, $bitPayInvoice);
+
             $this->updateInvoice($invoice, $updateInvoiceData);
 
-            $this->sendUpdateInvoiceEventStream($invoice, $data);
+            $this->sendUpdateInvoiceNotification->execute($invoice, $data['event'] ?? null);
         } catch (\Exception | \TypeError $e) {
             $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
                 'id' => $invoice->id
@@ -153,40 +154,5 @@ class UpdateInvoiceUsingBitPayIpn
         $this->logger->info('INVOICE_UPDATE_SUCCESS', 'Successfully updated invoice', [
             'id' => $invoice->id
         ]);
-    }
-
-    private function sendUpdateInvoiceEventStream(Invoice $invoice, array $data): void
-    {
-        $eventName = $data['event'] ?? null;
-
-        $this->sendUpdateInvoiceEventStream->execute(
-            $invoice,
-            $this->getEventMessageTypeFromEventName($eventName),
-            $this->getEventMessageFromEventName($invoice->getBitpayId(), $eventName)
-        );
-    }
-
-    private function getEventMessageTypeFromEventName(?string $eventName): ?UpdateInvoiceEventType
-    {
-        return match ($eventName) {
-            null, 'invoice_manuallyNotified', 'invoice_refundComplete' => null,
-            'invoice_paidInFull', 'invoice_confirmed', 'invoice_completed' => UpdateInvoiceEventType::SUCCESS,
-            'invoice_expired', 'invoice_failedToConfirm', 'invoice_declined' => UpdateInvoiceEventType::ERROR,
-            default => null
-        };
-    }
-
-    private function getEventMessageFromEventName(string $invoiceId, ?string $eventName): ?string
-    {
-        return match ($eventName) {
-            null, 'invoice_manuallyNotified', 'invoice_refundComplete' => null,
-            'invoice_paidInFull' => sprintf('Invoice %s has been paid in full.', $invoiceId),
-            'invoice_expired' => sprintf('Invoice %s has expired.', $invoiceId),
-            'invoice_confirmed' => sprintf('Invoice %s has been confirmed.', $invoiceId),
-            'invoice_completed' => sprintf('Invoice %s is complete.', $invoiceId),
-            'invoice_failedToConfirm' => sprintf('Invoice %s has failed to confirm.', $invoiceId),
-            'invoice_declined' => sprintf('Invoice %s has been declined.', $invoiceId),
-            default => null
-        };
     }
 }

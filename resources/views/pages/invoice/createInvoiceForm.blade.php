@@ -6,19 +6,7 @@
 
 @section('content')
 
-    <header class="bg-white shadow-sm lg:static lg:overflow-y-visible">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
-                <div class="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
-                    <div class="flex-shrink-0 flex items-center p-5">
-                        <a href="#">
-                            <img src="{{ $configuration->getDesign()->getLogo() }}" height="34" width="284">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    @include('includes.navigation')
 
     <div id="hero" class="relative" style="'background-color:' + {{ $configuration->getDesign()->getHero()->getBgColor() }}">
         <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">

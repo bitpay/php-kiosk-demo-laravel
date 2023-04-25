@@ -12,9 +12,9 @@ use App\Features\Shared\Configuration\BitPayConfiguration;
 use App\Features\Shared\Configuration\Design;
 use App\Features\Shared\Configuration\Field;
 use App\Features\Shared\Configuration\PosData;
-use Tests\AbstractUnitTest;
+use Tests\Unit\AbstractUnitTestCase;
 
-class BitPayConfigurationTest extends AbstractUnitTest
+class BitPayConfigurationTestCase extends AbstractUnitTestCase
 {
     private const TOKEN = 'someToken';
     private const ENV = 'prod';
