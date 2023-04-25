@@ -10,7 +10,7 @@ on:
       - 'main'
 
 jobs:
-  phpunit:
+  unit-tests:
     runs-on: ubuntu-latest
 
     strategy:
@@ -31,6 +31,20 @@ jobs:
           php_extensions: bcmath gmp xdebug
           testsuite: Unit
           version: 9
+
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: [ 8.0, 8.1, 8.2 ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: php-actions/composer@v6
+        with:
+          php_version: ${{ matrix.php-version }}
+          args: --ignore-platform-reqs
       - name: PHPUnit Integration Tests
         uses: php-actions/phpunit@v3
         with:
@@ -39,6 +53,7 @@ jobs:
           php_extensions: bcmath gmp xdebug
           testsuite: Integration
           version: 9
+
   phpcs:
     runs-on: ubuntu-latest
 
