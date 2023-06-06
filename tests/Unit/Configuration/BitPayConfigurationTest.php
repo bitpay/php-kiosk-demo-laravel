@@ -10,11 +10,13 @@ namespace Tests\Unit\Configuration;
 
 use App\Features\Shared\Configuration\BitPayConfiguration;
 use App\Features\Shared\Configuration\Design;
+use App\Features\Shared\Configuration\Donation;
 use App\Features\Shared\Configuration\Field;
+use App\Features\Shared\Configuration\Mode;
 use App\Features\Shared\Configuration\PosData;
 use Tests\Unit\AbstractUnitTestCase;
 
-class BitPayConfigurationTestCase extends AbstractUnitTestCase
+class BitPayConfigurationTest extends AbstractUnitTestCase
 {
     private const TOKEN = 'someToken';
     private const ENV = 'prod';
@@ -33,40 +35,10 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
     /**
      * @test
      */
-    public function it_should_return_default_environemnt(): void
-    {
-        $testedClass = new BitPayConfiguration(
-            self::FACADE,
-            null,
-            $this->getDesign(),
-            null,
-            null
-        );
-        self::assertEquals('test', $testedClass->getEnvironment());
-    }
-
-    /**
-     * @test
-     */
     public function it_should_return_facade(): void
     {
         $testedClass = $this->getTestedClass();
         self::assertEquals(self::FACADE, $testedClass->getFacade());
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_return_default_facade(): void
-    {
-        $testedClass = new BitPayConfiguration(
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-        self::assertEquals('pos', $testedClass->getFacade());
     }
 
     /**
@@ -104,21 +76,25 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
     {
         $testedClass = new BitPayConfiguration(
             'pos',
-            null,
-            null,
+            self::ENV,
+            $this->getDesign(),
+            $this->getDonation(),
+            Mode::STANDARD,
             null,
             null
         );
-        $this->assertEquals(false, $testedClass->isSignRequest());
+        self::assertEquals(false, $testedClass->isSignRequest());
 
         $testedClass = new BitPayConfiguration(
             'merchant',
-            null,
-            null,
+            self::ENV,
+            $this->getDesign(),
+            $this->getDonation(),
+            Mode::STANDARD,
             null,
             null
         );
-        $this->assertEquals(true, $testedClass->isSignRequest());
+        self::assertEquals(true, $testedClass->isSignRequest());
     }
 
     /**
@@ -146,6 +122,8 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
             self::FACADE,
             self::ENV,
             $design,
+            $this->getDonation(),
+            Mode::STANDARD,
             self::TOKEN,
             self::NOTIFICATION_EMAIL
         );
@@ -154,7 +132,7 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
         $result = $testedClass->getCurrencyIsoCode();
 
         // then
-        $this->assertEquals($currency, $result);
+        self::assertEquals($currency, $result);
     }
 
     /**
@@ -172,6 +150,8 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
             self::FACADE,
             self::ENV,
             $design,
+            $this->getDonation(),
+            Mode::STANDARD,
             self::TOKEN,
             self::NOTIFICATION_EMAIL
         );
@@ -180,7 +160,55 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
         $result = $testedClass->getCurrencyIsoCode();
 
         // then
-        $this->assertEquals('USD', $result);
+        self::assertEquals('USD', $result);
+    }
+
+    /**
+     * @test
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    public function it_should_return_donation(): void
+    {
+        $donation = $this->getDonation();
+
+        $testedClass = new BitPayConfiguration(
+            self::FACADE,
+            self::ENV,
+            $this->getDesign(),
+            $donation,
+            Mode::STANDARD,
+            self::TOKEN,
+            self::NOTIFICATION_EMAIL
+        );
+
+        // when
+        $result = $testedClass->getDonation();
+
+        // then
+        self::assertSame($donation, $result);
+    }
+
+    /**
+     * @test
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    public function it_should_return_mode(): void
+    {
+        $testedClass = new BitPayConfiguration(
+            self::FACADE,
+            self::ENV,
+            $this->getDesign(),
+            $this->getDonation(),
+            Mode::DONATION,
+            self::TOKEN,
+            self::NOTIFICATION_EMAIL
+        );
+
+        // when
+        $result = $testedClass->getMode();
+
+        // then
+        self::assertSame(Mode::DONATION, $result);
     }
 
     private function getTestedClass(?Design $design = null): BitPayConfiguration
@@ -193,6 +221,8 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
             self::FACADE,
             self::ENV,
             $design,
+            $this->getDonation(),
+            Mode::STANDARD,
             self::TOKEN,
             self::NOTIFICATION_EMAIL
         );
@@ -205,5 +235,14 @@ class BitPayConfigurationTestCase extends AbstractUnitTestCase
     private function getDesign(): Design|\PHPUnit\Framework\MockObject\MockObject
     {
         return $this->createMock(Design::class);
+    }
+
+    /**
+     * @return Donation|\PHPUnit\Framework\MockObject\MockObject
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    private function getDonation(): \PHPUnit\Framework\MockObject\MockObject|Donation
+    {
+        return $this->createMock(Donation::class);
     }
 }

@@ -12,7 +12,7 @@ use App\Features\Shared\Configuration\Field;
 use App\Features\Shared\Configuration\Option;
 use Tests\Unit\AbstractUnitTestCase;
 
-class FieldTestCase extends AbstractUnitTestCase
+class FieldTest extends AbstractUnitTestCase
 {
     /**
      * @test

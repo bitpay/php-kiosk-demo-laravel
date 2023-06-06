@@ -6,8 +6,13 @@
 
 namespace App\Infrastructure\Laravel;
 
+use App\Features\Invoice\CreateInvoice\Validator\CreateInvoiceValidator;
+use App\Features\Invoice\CreateInvoice\Validator\DonationParamsValidator;
+use App\Features\Invoice\CreateInvoice\Validator\PosParamsValidator;
 use App\Features\Shared\Configuration\BitPayConfigurationFactoryInterface;
+use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Features\Shared\Configuration\BitPayYamlConfigurationFactory;
+use App\Features\Shared\Configuration\Mode;
 use App\Features\Invoice\UpdateInvoice\BaseUpdateInvoiceValidator;
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceIpnValidator;
@@ -23,13 +28,12 @@ use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Jwt\StaticTokenProvider;
-use Symfony\Component\Mercure\Publisher;
-use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\PropertyInfo\Extractor\ConstructorExtractor;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\YamlEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -107,10 +111,35 @@ class AppServiceProvider extends ServiceProvider
                 );
 
                 $normalizer = [
+                    new BackedEnumNormalizer(),
                     new ObjectNormalizer(propertyTypeExtractor: $typeExtractor),
                     new ArrayDenormalizer(),
                 ];
                 return new Serializer($normalizer, [new YamlEncoder()]);
+            }
+        );
+
+        $this->app->bind(
+            DonationParamsValidator::class,
+            function() {
+                return new DonationParamsValidator($this->app->get(PosParamsValidator::class));
+            }
+        );
+
+        $this->app->bind(
+            CreateInvoiceValidator::class,
+            function() {
+                /** @var BitPayConfigurationInterface $configuration */
+                $configuration = $this->app->get(BitPayConfigurationInterface::class);
+                if ($configuration->getMode() === Mode::DONATION) {
+                    return $this->app->get(DonationParamsValidator::class);
+                }
+
+                if ($configuration->getMode() === Mode::STANDARD) {
+                    return $this->app->get(PosParamsValidator::class);
+                }
+
+                throw new \RuntimeException("Wrong MODE in configuration yaml file (application*.yaml");
             }
         );
     }

@@ -12,7 +12,7 @@ use App\Features\Shared\Configuration\Field;
 use App\Features\Shared\Configuration\PosData;
 use Tests\Unit\AbstractUnitTestCase;
 
-class PosDataTestCase extends AbstractUnitTestCase
+class PosDataTest extends AbstractUnitTestCase
 {
     /**
      * @test

@@ -13,7 +13,7 @@ use App\Features\Shared\Configuration\Hero;
 use App\Features\Shared\Configuration\PosData;
 use Tests\Unit\AbstractUnitTestCase;
 
-class DesignTestCase extends AbstractUnitTestCase
+class DesignTest extends AbstractUnitTestCase
 {
     /**
      * @test
