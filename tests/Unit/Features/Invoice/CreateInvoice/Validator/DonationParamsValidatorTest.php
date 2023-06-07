@@ -214,8 +214,8 @@ class DonationParamsValidatorTest extends AbstractUnitTestCase
         $validator->method('execute')->willReturn([
             'store' => 'store-1',
             'register' => '2',
-            'reg_transaction_no' => 'test123']
-        );
+            'reg_transaction_no' => 'test123'
+        ]);
 
         return new DonationParamsValidator($validator);
     }

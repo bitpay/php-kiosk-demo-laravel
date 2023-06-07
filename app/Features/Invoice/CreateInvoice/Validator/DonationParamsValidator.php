@@ -46,18 +46,20 @@ class DonationParamsValidator implements CreateInvoiceValidator
     private function validateEmail(?string $buyerEmail): void
     {
         if (!$buyerEmail || !filter_var($buyerEmail, FILTER_VALIDATE_EMAIL)) {
-            throw new ValidationFailed("Wrong email");
+            throw new ValidationFailed('Wrong email');
         }
     }
 
     private function validateRegion(?string $region): void
     {
-        $availableRegions = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS",
-        "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC",
-        "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"];
+        $availableRegions = [
+            'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN',
+            'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY',
+            'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
+        ];
 
         if (!$region || !in_array($region, $availableRegions, true)) {
-            throw new ValidationFailed("Wrong region");
+            throw new ValidationFailed('Wrong region');
         }
     }
 

@@ -121,14 +121,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             DonationParamsValidator::class,
-            function() {
+            function () {
                 return new DonationParamsValidator($this->app->get(PosParamsValidator::class));
             }
         );
 
         $this->app->bind(
             CreateInvoiceValidator::class,
-            function() {
+            function () {
                 /** @var BitPayConfigurationInterface $configuration */
                 $configuration = $this->app->get(BitPayConfigurationInterface::class);
                 if ($configuration->getMode() === Mode::DONATION) {

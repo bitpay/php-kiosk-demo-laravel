@@ -24,7 +24,6 @@ use App\Features\Shared\UrlProvider;
 use App\Features\Shared\UuidFactory;
 use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
-use App\Shared\Exceptions\ValidationFailed;
 use BitPaySDK\Client;
 use BitPaySDK\Exceptions\BitPayException;
 use Tests\Unit\AbstractUnitTestCase;
