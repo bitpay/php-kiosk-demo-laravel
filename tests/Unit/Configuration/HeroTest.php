@@ -11,7 +11,7 @@ namespace Tests\Unit\Configuration;
 use App\Features\Shared\Configuration\Hero;
 use Tests\Unit\AbstractUnitTestCase;
 
-class HeroTestCase extends AbstractUnitTestCase
+class HeroTest extends AbstractUnitTestCase
 {
     /**
      * @test

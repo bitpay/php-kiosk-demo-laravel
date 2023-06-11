@@ -10,29 +10,35 @@ namespace App\Features\Shared\Configuration;
 
 class BitPayConfiguration implements BitPayConfigurationInterface
 {
-    private ?string $environment;
-    private ?string $facade;
-    private ?Design $design;
+    private string $environment;
+    private string $facade;
+    private Donation $donation;
+    private Design $design;
+    private Mode $mode;
     private ?string $token;
     private ?string $notificationEmail;
 
     /**
      * @param string $facade
-     * @param string|null $environment
-     * @param Design|null $design
+     * @param string $environment
+     * @param Design $design
      * @param string|null $token
      * @param string|null $notificationEmail
      */
     public function __construct(
-        ?string $facade,
-        ?string $environment,
-        ?Design $design,
+        string $facade,
+        string $environment,
+        Design $design,
+        Donation $donation,
+        Mode $mode,
         ?string $token,
         ?string $notificationEmail
     ) {
         $this->environment = $environment;
         $this->facade = $facade;
         $this->design = $design;
+        $this->donation = $donation;
+        $this->mode = $mode;
         $this->token = $token;
         $this->notificationEmail = $notificationEmail;
     }
@@ -41,19 +47,11 @@ class BitPayConfiguration implements BitPayConfigurationInterface
      */
     public function getEnvironment(): string
     {
-        if (!$this->environment) {
-            return 'test';
-        }
-
         return $this->environment;
     }
 
     public function getFacade(): string
     {
-        if (!$this->facade) {
-            return 'pos';
-        }
-
         return $this->facade;
     }
 
@@ -63,6 +61,30 @@ class BitPayConfiguration implements BitPayConfigurationInterface
     public function getDesign(): Design
     {
         return $this->design;
+    }
+
+    /**
+     * @return Donation
+     */
+    public function getDonation(): Donation
+    {
+        return $this->donation;
+    }
+
+    /**
+     * @return Mode
+     */
+    public function getMode(): Mode
+    {
+        return $this->mode;
+    }
+
+    /**
+     * @param Mode $mode
+     */
+    public function setMode(Mode $mode)
+    {
+        $this->mode = $mode;
     }
 
     /**

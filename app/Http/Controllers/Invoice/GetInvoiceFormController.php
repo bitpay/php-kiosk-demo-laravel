@@ -14,6 +14,8 @@ use App\Features\Shared\SseConfiguration;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use App\Features\Shared\Configuration\Mode;
+use Illuminate\Http\Request;
 
 class GetInvoiceFormController extends Controller
 {
@@ -28,12 +30,15 @@ class GetInvoiceFormController extends Controller
         $this->sseConfiguration = $sseConfiguration;
     }
 
-    public function execute(): View|Factory
+    public function execute(Request $request): View|Factory
     {
-        return view('pages.invoice.createInvoiceForm', [
+        $design = $this->bitPayConfiguration->getMode();
+
+        return view('pages.invoice.create' . ucfirst($design->value) . 'InvoiceForm', [
             'configuration' => $this->bitPayConfiguration,
             'sseUrl' => $this->sseConfiguration->publicUrl(),
-            'sseTopic' => SendUpdateInvoiceEventStream::TOPIC
+            'sseTopic' => SendUpdateInvoiceEventStream::TOPIC,
+            'errorMessage' => $request->get('errorMessage')
         ]);
     }
 }

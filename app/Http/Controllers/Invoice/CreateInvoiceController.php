@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Invoice;
 
 use App\Features\Invoice\CreateInvoice\CreateInvoice;
 use App\Http\Controllers\Controller;
+use App\Shared\Exceptions\ValidationFailed;
+use BitpaySDK\Exceptions\BitPayException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +31,11 @@ class CreateInvoiceController extends Controller
      */
     public function execute(Request $request): RedirectResponse
     {
-        $invoice = $this->createInvoice->execute($request->request->all());
+        try {
+            $invoice = $this->createInvoice->execute($request->request->all());
+        } catch (BitPayException | ValidationFailed $e) {
+            return Redirect::route('invoiceForm', ['errorMessage' => $e->getMessage()]);
+        }
 
         return Redirect::to($invoice->bitpay_url);
     }

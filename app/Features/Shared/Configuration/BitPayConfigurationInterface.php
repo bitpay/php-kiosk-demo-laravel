@@ -20,6 +20,8 @@ interface BitPayConfigurationInterface
      */
     public function getToken(): ?string;
 
+    public function getDonation(): Donation;
+
     /**
      * @return string|null
      */
@@ -32,4 +34,8 @@ interface BitPayConfigurationInterface
     public function getFacade(): string;
 
     public function isSignRequest(): bool;
+
+    public function getMode(): Mode;
+
+    public function setMode(Mode $mode);
 }

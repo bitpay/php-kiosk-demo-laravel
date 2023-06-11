@@ -8,15 +8,19 @@ declare(strict_types=1);
 
 namespace App\Features\Invoice\CreateInvoice;
 
+use App\Features\Invoice\CreateInvoice\Validator\CreateInvoiceValidator;
 use App\Features\Shared\Configuration\BitPayConfigurationInterface;
+use App\Features\Shared\Configuration\Mode;
 use App\Features\Shared\InvoiceSaver;
 use App\Features\Shared\Logger;
 use App\Features\Shared\UrlProvider;
 use App\Features\Shared\UuidFactory;
 use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
+use App\Shared\Exceptions\ValidationFailed;
 use BitpaySDK\Exceptions\BitPayException;
 use BitPaySDK\Model\Facade;
+use BitPaySDK\Model\Invoice\Buyer;
 use BitPaySDK\Model\Invoice\Invoice as BitPayInvoice;
 
 class CreateInvoice
@@ -24,6 +28,7 @@ class CreateInvoice
     private BitPayConfigurationInterface $bitPayConfiguration;
     private BitPayClientFactory $bitPayClientFactory;
     private InvoiceSaver $invoiceSaver;
+    private CreateInvoiceValidator $createInvoiceValidator;
     private UuidFactory $uuidFactory;
     private UrlProvider $urlProvider;
     private Logger $logger;
@@ -32,6 +37,7 @@ class CreateInvoice
         BitPayConfigurationInterface $bitPayConfiguration,
         BitPayClientFactory $bitPayClientFactory,
         InvoiceSaver $invoiceSaver,
+        CreateInvoiceValidator $createInvoiceValidator,
         UuidFactory $uuidFactory,
         UrlProvider $urlProvider,
         Logger $logger
@@ -39,6 +45,7 @@ class CreateInvoice
         $this->bitPayConfiguration = $bitPayConfiguration;
         $this->bitPayClientFactory = $bitPayClientFactory;
         $this->invoiceSaver = $invoiceSaver;
+        $this->createInvoiceValidator = $createInvoiceValidator;
         $this->uuidFactory = $uuidFactory;
         $this->urlProvider = $urlProvider;
         $this->logger = $logger;
@@ -47,11 +54,12 @@ class CreateInvoice
     /**
      * @throws \JsonException
      * @throws \BitpaySDK\Exceptions\BitPayException
+     * @throws ValidationFailed
      */
     public function execute(array $params): Invoice
     {
         try {
-            $validatedParams = $this->validateParams($params);
+            $validatedParams = $this->createInvoiceValidator->execute($params);
             $uuid = $this->uuidFactory->create();
             $requestData = $this->createRequestData($validatedParams, $uuid);
             $bitpayInvoice = $this->createBitpayInvoice($requestData);
@@ -71,41 +79,6 @@ class CreateInvoice
         return $invoice;
     }
 
-    private function validateParams(array $params): array
-    {
-        $requiredParametersName = [];
-
-        $bitPayFields = $this->bitPayConfiguration->getDesign()->getPosData()->getFields();
-        foreach ($bitPayFields as $field) {
-            if ($field->isRequired() === true) {
-                $requiredParametersName[] = $field->getName();
-            }
-        }
-
-        foreach ($requiredParametersName as $requiredParameterName) {
-            $value = $params[$requiredParameterName] ?? null;
-            if (!$value) {
-                throw new \RuntimeException('Missing required field ' . $requiredParameterName);
-            }
-        }
-
-        $validatedParams = [];
-        foreach ($bitPayFields as $bitPayField) {
-            $parameterName = $bitPayField->getName();
-            if (array_key_exists($parameterName, $params)) {
-                $validatedParams[$parameterName] = $params[$parameterName];
-            }
-        }
-
-        if (!array_key_exists('price', $validatedParams)) {
-            throw new \RuntimeException('Missing price');
-        }
-
-        $validatedParams['price'] = number_format((float)$validatedParams['price'], 2);
-
-        return $validatedParams;
-    }
-
     /**
      * @param array $validatedParams
      * @param string $uuid
@@ -119,13 +92,18 @@ class CreateInvoice
         $invoice = new BitPayInvoice((float)$price, $this->bitPayConfiguration->getCurrencyIsoCode());
         $notificationEmail = $this->bitPayConfiguration->getNotificationEmail();
         $notificationUrl = $this->getNotificationUrl($uuid);
+        $invoiceMode = $this->bitPayConfiguration->getMode();
 
         $invoice->setOrderId((string)uniqid('', true));
         $invoice->setTransactionSpeed("medium");
-        $invoice->setItemDesc("Example");
+        $invoice->setItemDesc($invoiceMode->value);
         $invoice->setPosData($posDataJson);
         $invoice->setNotificationURL($notificationUrl);
         $invoice->setExtendedNotifications(true);
+
+        if ($invoiceMode === Mode::DONATION) {
+            $invoice->setBuyer($this->getBuyer($validatedParams));
+        }
 
         if ($notificationEmail) {
             $invoice->setNotificationEmail($notificationEmail);
@@ -152,5 +130,24 @@ class CreateInvoice
     private function getNotificationUrl(string $uuid): string
     {
         return sprintf("%s/invoices/%s", $this->urlProvider->applicationUrl(), $uuid);
+    }
+
+    private function getBuyer(array $validatedParams): Buyer
+    {
+        $buyer = new Buyer();
+        $buyer->setName($validatedParams['buyerName'] ?? null);
+        $buyer->setAddress1($validatedParams['buyerAddress1'] ?? null);
+        $buyer->setLocality($validatedParams['buyerLocality'] ?? null);
+        $buyer->setRegion($validatedParams['buyerRegion'] ?? null);
+        $buyer->setPostalCode($validatedParams['buyerPostalCode'] ?? null);
+        $buyer->setCountry('US');
+        $buyer->setEmail($validatedParams['buyerEmail'] ?? null);
+        $buyer->setPhone($validatedParams['buyerPhone'] ?? null);
+
+        if (isset($validatedParams['buyerAddress2'])) {
+            $buyer->setAddress2($validatedParams['buyerAddress2'] ?? null);
+        }
+
+        return $buyer;
     }
 }

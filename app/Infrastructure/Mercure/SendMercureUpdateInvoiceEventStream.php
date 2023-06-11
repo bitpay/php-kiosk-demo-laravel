@@ -32,7 +32,7 @@ class SendMercureUpdateInvoiceEventStream implements SendUpdateInvoiceEventStrea
         ?string $eventMessage
     ): void {
         $this->hub->publish(new Update(
-            'update-invoice',
+            ['update-invoice'],
             json_encode(
                 [
                     'status' => $invoice->status,
