@@ -54,7 +54,7 @@ class BitPayYamlConfigurationFactory implements BitPayConfigurationFactoryInterf
             ));
         }
 
-        return  $this->serializer->denormalize(
+        return $this->serializer->denormalize(
             $data['bitpay'],
             BitPayConfiguration::class,
             'yaml'

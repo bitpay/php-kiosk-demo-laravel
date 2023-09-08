@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  php-fpm:
+    build:
+      context: ./docker/php-fpm
+    working_dir: /var/www/html
+    volumes:
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./:/var/www/html/php-kiosk-demo-laravel
+    expose:
+      - "9000"
+    networks:
+      - bitpay
+
+  apache2:
+    build:
+      context: ./docker/apache2
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/apache2/sites:/etc/apache2/sites-available
+      - ./docker/apache2/ssl:/etc/apache2/ssl
+      - ./:/var/www/html/php-kiosk-demo-laravel
+    depends_on:
+      - php-fpm
+    networks:
+      - bitpay
+
+  mercure:
+    build:
+      context: ./docker/mercure
+    ports:
+      - "1337:80"
+      - "1338:443"
+    privileged: true
+    environment:
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      DEBUG: debug
+      SERVER_NAME: :80
+      ALLOW_ANONYMOUS: 1
+      MERCURE_EXTRA_DIRECTIVES: |-
+        cors_origins "http://127.0.0.1" "http://php-kiosk-demo-laravel.test"
+        anonymous
+    hostname: bitpay-mercure
+    networks:
+      - bitpay
+
+networks:
+  bitpay:
