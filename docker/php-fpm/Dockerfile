@@ -1,4 +1,4 @@
-FROM php:8.2.10-fpm-alpine
+FROM php:8.2-fpm-alpine
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -30,9 +30,7 @@ RUN set -eux \
         tzdata \
         unixodbc \
         vips \
-        yaml
-
-RUN set -eux \
+        yaml \
     && apk add --no-cache --virtual .build-deps \
         autoconf \
         bzip2-dev \
@@ -66,10 +64,7 @@ RUN set -eux \
         vips-dev \
         yaml-dev \
         zlib-dev \
-\
-
     && ln -s /usr/lib /usr/local/lib64 \
-\
     && ln -s /usr/lib/$(apk --print-arch)-linux-gnu/libXpm.* /usr/lib/ \
     && docker-php-ext-configure gd \
         --enable-gd \
@@ -98,7 +93,7 @@ RUN set -eux \
     && apk del .build-deps \
     && true
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash shadow
 
 RUN set -eux \
     && chmod +x "$(php -r 'echo ini_get("extension_dir");')"/*;
@@ -114,6 +109,10 @@ ARG PGID=1000
 ENV PGID ${PGID}
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
+
+RUN adduser www-data www-data
+RUN groupmod -o -g ${PGID} www-data && \
+    usermod -o -u ${PUID} -g www-data www-data
 
 WORKDIR /var/www
 
