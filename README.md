@@ -108,13 +108,9 @@ values.
 ## Running
 
 - `add php-kiosk-demo-laravel.test to your OS hosts`
-- `docker-compose up`
-- `composer install` from php-fpm container (docker-compose exec --user=www-data php-fpm bash)
 - `cp .env.example .env` and configure it
 - `cp application-example.yaml application.yaml` and configure it
-- `php artisan migrate` to run DB migrations (and create sqlite DB if you use this database)
-- `php artisan key:generate` to generate an encryption key
-- `php artisan serve` to run the application
+- `docker-compose up`
 
 ## Testing
 

@@ -13,6 +13,18 @@ services:
     networks:
       - bitpay
 
+  init:
+    build:
+      context: ./docker/php-fpm
+    working_dir: /usr/local/apache2/htdocs/php-kiosk-demo-laravel
+    volumes:
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./:/usr/local/apache2/htdocs/php-kiosk-demo-laravel
+    networks:
+      - bitpay
+    user: "1000:1000"
+    command: sh -c './init.sh'
+
   apache2:
     build:
       context: ./docker/apache2
