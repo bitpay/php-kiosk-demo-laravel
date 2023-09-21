@@ -4,7 +4,7 @@
     @include('includes.head')
 </head>
 <body>
-    <div id="main" class="row">
+    <div id="main">
 
         <div id="snackbars" class="fixed top-10 right-10 w-80 space-y-5">
             <div aria-live="assertive" id="snackbar-template" class="invisible pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
