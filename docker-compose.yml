@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  php-fpm:
+    build:
+      context: ./docker/php-fpm
+    working_dir: /usr/local/apache2/htdocs/php-kiosk-demo-laravel
+    volumes:
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./:/usr/local/apache2/htdocs/php-kiosk-demo-laravel
+    expose:
+      - "9000"
+    networks:
+      - bitpay
+
+  init:
+    build:
+      context: ./docker/php-fpm
+    working_dir: /usr/local/apache2/htdocs/php-kiosk-demo-laravel
+    volumes:
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./:/usr/local/apache2/htdocs/php-kiosk-demo-laravel
+    networks:
+      - bitpay
+    user: "1000:1000"
+    command: sh -c './init.sh'
+
+  apache2:
+    build:
+      context: ./docker/apache2
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/apache2/sites/default.apache.conf:/usr/local/apache2/conf/extra/default.apache.conf
+      - ./:/usr/local/apache2/htdocs/php-kiosk-demo-laravel
+    depends_on:
+      - php-fpm
+    networks:
+      - bitpay
+    command: ["httpd-foreground"]
+
+  mercure:
+    build:
+      context: ./docker/mercure
+    ports:
+      - "1337:80"
+      - "1338:443"
+    privileged: true
+    environment:
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      DEBUG: debug
+      SERVER_NAME: :80
+      ALLOW_ANONYMOUS: 1
+      MERCURE_EXTRA_DIRECTIVES: |-
+        cors_origins "http://127.0.0.1" "http://php-kiosk-demo-laravel.test"
+        anonymous
+    hostname: bitpay-mercure
+    networks:
+      - bitpay
+
+networks:
+  bitpay:

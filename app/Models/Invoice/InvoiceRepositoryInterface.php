@@ -13,11 +13,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface InvoiceRepositoryInterface
 {
-    public const PER_PAG = 10;
+    public const PER_PAGE = 10;
 
     public function findOne(int $id): ?Invoice;
 
-    public function findPaginated(int $pageNumber, int $perPage = self::PER_PAG): LengthAwarePaginator;
+    public function findPaginated(int $pageNumber, int $perPage = self::PER_PAGE): LengthAwarePaginator;
 
     public function findOneByUuid(string $uuid): ?Invoice;
 }

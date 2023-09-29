@@ -24,7 +24,7 @@ class EloquentInvoiceRepository implements InvoiceRepositoryInterface
         return Invoice::where('uuid', $uuid)->first();
     }
 
-    public function findPaginated(int $pageNumber, int $perPage = self::PER_PAG): LengthAwarePaginator
+    public function findPaginated(int $pageNumber, int $perPage = self::PER_PAGE): LengthAwarePaginator
     {
         return Invoice::paginate($perPage, ['*'], 'page', $pageNumber);
     }
