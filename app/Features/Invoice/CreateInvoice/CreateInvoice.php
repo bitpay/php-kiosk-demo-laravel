@@ -122,7 +122,7 @@ class CreateInvoice
         $client = $this->bitPayClientFactory->create();
 
         $facade = $this->bitPayConfiguration->getFacade();
-        $signRequest = $facade !== Facade::Pos;
+        $signRequest = $facade !== Facade::POS;
 
         return $client->createInvoice($requestedInvoice, $facade, $signRequest);
     }
