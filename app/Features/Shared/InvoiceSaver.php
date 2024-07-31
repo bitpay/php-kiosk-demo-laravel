@@ -268,9 +268,9 @@ class InvoiceSaver
         $invoicePaymentCurrency = new InvoicePaymentCurrency([
             'currency_code' => $currency,
             'total' => $amount,
-            'subtotal' => $bitpayInvoice->getPaymentSubTotals()->$currency ?? null,
-            'display_total' => $bitpayInvoice->getPaymentDisplayTotals()->$currency ?? null,
-            'display_subtotal' => $bitpayInvoice->getPaymentDisplaySubTotals()->$currency ?? null,
+            'subtotal' => $bitpayInvoice->getPaymentSubtotals()[$currency] ?? null,
+            'display_total' => $bitpayInvoice->getPaymentDisplayTotals()[$currency] ?? null,
+            'display_subtotal' => $bitpayInvoice->getPaymentDisplaySubTotals()[$currency] ?? null,
         ]);
         $invoicePaymentCurrency->invoicePayment()->associate($invoicePayment);
 
