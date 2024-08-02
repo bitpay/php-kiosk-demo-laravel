@@ -26,6 +26,7 @@ use App\Features\Shared\BitPayClientFactory;
 use App\Models\Invoice\Invoice;
 use BitPaySDK\Client;
 use BitPaySDK\Exceptions\BitPayException;
+use BitPaySDK\Exceptions\BitPayGenericException;
 use Tests\Unit\AbstractUnitTestCase;
 
 class CreateInvoiceTest extends AbstractUnitTestCase
@@ -80,7 +81,7 @@ class CreateInvoiceTest extends AbstractUnitTestCase
         $urlProvider->method('applicationUrl')->willReturn('http://localhost');
         $uuidFactory->method('create')->willReturn($uuid);
         $bitPayClientFactory->method('create')->willReturn($bitPayClient);
-        $bitPayClient->expects(self::once())->method('createInvoice')->willThrowException(new BitPayException());
+        $bitPayClient->expects(self::once())->method('createInvoice')->willThrowException(new BitPayGenericException());
         $logger->expects(self::once())->method('error');
         $this->expectException(\RuntimeException::class);
 
