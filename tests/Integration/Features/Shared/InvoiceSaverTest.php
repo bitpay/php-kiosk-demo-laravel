@@ -115,7 +115,8 @@ class InvoiceSaverTest extends TestCase
         Assert::assertEquals($bitpayInvoice->getPaymentSubTotals()['BTC'], $btcPaymentCurrency->subtotal);
         Assert::assertEquals(
             $bitpayInvoice->getPaymentDisplaySubTotals()['BTC'],
-            $btcPaymentCurrency->display_subtotal);
+            $btcPaymentCurrency->display_subtotal
+        );
         $buyerProvidedInfo = $bitpayInvoice->getBuyerProvidedInfo();
         Assert::assertEquals($buyerProvidedInfo->getName(), $invoiceBuyerProvidedInfo->name);
         Assert::assertEquals($buyerProvidedInfo->getPhoneNumber(), $invoiceBuyerProvidedInfo->phone_number);
