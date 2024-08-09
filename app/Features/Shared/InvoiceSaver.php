@@ -284,7 +284,7 @@ class InvoiceSaver
 
         $invoicePaymentCurrency->save();
 
-        $bitpayPaymentCodes = $bitpayInvoice->getPaymentCodes()->$currency ?? null;
+        $bitpayPaymentCodes = $bitpayInvoice->getPaymentCodes()[$currency] ?? null;
         if ($bitpayPaymentCodes) {
             $invoicePaymentCurrencyCodes = [];
             foreach ($bitpayPaymentCodes as $code => $value) {
