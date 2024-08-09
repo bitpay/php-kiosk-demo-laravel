@@ -17,7 +17,6 @@ use BitPaySDK\Model\Invoice\RefundInfo;
 use BitPaySDK\Model\Invoice\Shopper;
 use BitPaySDK\Model\Invoice\SupportedTransactionCurrencies;
 use BitPaySDK\Model\Invoice\SupportedTransactionCurrency;
-use BitPaySDK\Model\Invoice\TransactionDetails;
 use BitPaySDK\Model\Invoice\UniversalCodes;
 
 class ExampleSdkInvoice
@@ -126,19 +125,7 @@ class ExampleSdkInvoice
         $invoice->setPaymentDisplayTotals($paymentDisplayTotals);
         $invoice->setPaymentSubTotals($paymentSubTotals);
         $invoice->setPaymentDisplaySubTotals($paymentDisplaySubTotals);
-        /*$invoice->setItemizedDetails([
-            [
-                "amount" => 5,
-                "description" => "Item 1",
-                "isFee" => false
-            ],
-            [
-                "amount" => 15,
-                "description" => "Item 2",
-                "isFee" => false
-            ]
-        ]);
-        */
+        $invoice->setItemizedDetails(self::getInvoiceItemizedDetails());
         $paymentCodes = [
           "BTC" => [
               "BIP72b" => "bitcoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
@@ -147,7 +134,6 @@ class ExampleSdkInvoice
         $invoice->setPaymentCodes($paymentCodes);
 
         $invoice->setBuyerProvidedInfo(self::getBuyerProvidedInfo());
-        //$invoice->setTransactionDetails(self::getTransactionDetails());
         $invoice->setUniversalCodes(self::getUniversalCodes());
         $invoice->setSupportedTransactionCurrencies(self::getSupportedTransactionCurrencies());
         $invoice->setMinerFees(self::getMinerFees());
@@ -157,6 +143,21 @@ class ExampleSdkInvoice
         $invoice->setUrl('https://test.bitpay.com/invoice?id=YUVJ8caCU1DLnUoc4nug4iN');
 
         return $invoice;
+    }
+
+    private static function getInvoiceItemizedDetails()
+    {
+      $exampleItemizedDetails1 = new ItemizedDetails;
+      $exampleItemizedDetails1->setAmount(5.0);
+      $exampleItemizedDetails1->setDescription('Item 1');
+      $exampleItemizedDetails1->setIsFee(false);
+      $exampleItemizedDetails2 = new ItemizedDetails;
+      $exampleItemizedDetails2->setAmount(15.0);
+      $exampleItemizedDetails2->setDescription('Item 2');
+      $exampleItemizedDetails2->setIsFee(false);
+      $itemizedDetails = array($exampleItemizedDetails1, $exampleItemizedDetails2);
+
+      return $itemizedDetails;
     }
 
     private static function getBuyerProvidedInfo(): BuyerProvidedInfo
@@ -171,16 +172,6 @@ class ExampleSdkInvoice
         $info->setSmsVerified(true);
 
         return $info;
-    }
-
-    private static function getTransactionDetails(): TransactionDetails
-    {
-        $transactionDetails = new TransactionDetails();
-        $transactionDetails->setAmount(12.2);
-        $transactionDetails->setDescription('transaction description');
-        $transactionDetails->setIsFee(true);
-
-        return $transactionDetails;
     }
 
     private static function getExampleExchangeRates(): array

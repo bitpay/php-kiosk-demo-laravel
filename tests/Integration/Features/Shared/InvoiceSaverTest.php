@@ -29,7 +29,6 @@ class InvoiceSaverTest extends TestCase
         $bitpayInvoice = ExampleSdkInvoice::create();
         $uuid = '1234';
         $applicationInvoice = $this->getTestedClass()->fromSdkModel($bitpayInvoice, $uuid);
-        var_dump($applicationInvoice);
 
         /** @var InvoiceTransaction $transaction */
         $transaction = $applicationInvoice->invoiceTransactions()->getResults()[0];
@@ -68,15 +67,15 @@ class InvoiceSaverTest extends TestCase
             DateTimeImmutableCreator::fromTimestamp((int)$bitpayInvoice->getExpirationTime()),
             $applicationInvoice->expiration_time
         );
-        //$firstItemizedDetails = $bitpayInvoice->getItemizedDetails()[0];
-        //$invoiceItemizedDetails = $applicationInvoice->invoiceItemizedDetails()->get();
-        //Assert::assertEquals($firstItemizedDetails['description'], $invoiceItemizedDetails[0]->description);
-        //Assert::assertEquals($firstItemizedDetails['isFee'], $invoiceItemizedDetails[0]->is_fee);
-        //Assert::assertEquals($firstItemizedDetails['amount'], $invoiceItemizedDetails[0]->amount);
-        //$secondItemizedDetails = $bitpayInvoice->getItemizedDetails()[1];
-        //Assert::assertEquals($secondItemizedDetails['description'], $invoiceItemizedDetails[1]->description);
-        //Assert::assertEquals($secondItemizedDetails['isFee'], $invoiceItemizedDetails[1]->is_fee);
-        //Assert::assertEquals($secondItemizedDetails['amount'], $invoiceItemizedDetails[1]->amount);
+        $firstItemizedDetails = $bitpayInvoice->getItemizedDetails()[0];
+        $invoiceItemizedDetails = $applicationInvoice->invoiceItemizedDetails()->get();
+        Assert::assertEquals($firstItemizedDetails->getDescription(), $invoiceItemizedDetails[0]->description);
+        Assert::assertEquals($firstItemizedDetails->getIsFee(), $invoiceItemizedDetails[0]->is_fee);
+        Assert::assertEquals($firstItemizedDetails->getAmount(), $invoiceItemizedDetails[0]->amount);
+        $secondItemizedDetails = $bitpayInvoice->getItemizedDetails()[1];
+        Assert::assertEquals($secondItemizedDetails->getDescription(), $invoiceItemizedDetails[1]->description);
+        Assert::assertEquals($secondItemizedDetails->getIsFee(), $invoiceItemizedDetails[1]->is_fee);
+        Assert::assertEquals($secondItemizedDetails->getAmount(), $invoiceItemizedDetails[1]->amount);
         $firstInvoiceTransaction = $bitpayInvoice->getTransactions()[0];
         Assert::assertEquals($firstInvoiceTransaction['amount'], $transaction->amount);
         Assert::assertEquals($firstInvoiceTransaction['confirmations'], $transaction->confirmations);

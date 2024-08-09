@@ -180,9 +180,9 @@ class InvoiceSaver
             }
 
             $invoiceItemizedDetail = new InvoiceItemizedDetail([
-                'amount' => $itemizedDetail['amount'],
-                'description' => $itemizedDetail['description'],
-                'is_fee' => $itemizedDetail['isFee'],
+                'amount' => $itemizedDetail->getAmount(),
+                'description' => $itemizedDetail->getDescription(),
+                'is_fee' => $itemizedDetail->getIsFee(),
             ]);
             $result[] = $invoiceItemizedDetail;
         }
@@ -389,7 +389,7 @@ class InvoiceSaver
         InvoicePaymentCurrency $invoicePaymentCurrency,
         string $currency
     ): array {
-        $bitpayExchangeRates = $bitpayInvoice->getExchangeRates()->$currency ?? null;
+        $bitpayExchangeRates = $bitpayInvoice->getExchangeRates()[$currency] ?? null;
         if (!$bitpayExchangeRates) {
             return [];
         }
