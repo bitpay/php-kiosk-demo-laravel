@@ -134,31 +134,31 @@ class ExampleSdkInvoice
               "BIP72b" => "bitcoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "ETH" => [
-            "EIP681" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+              "EIP681" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "GUSD" => [
-            "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "PAX" => [
-            "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "BUSD" => [
-            "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "USDC" => [
-            "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "XRP" => [
-            "BIP72b" => "ripple:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH",
+              "BIP72b" => "ripple:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH",
           ],
           "DOGE" => [
-            "BIP72b" => "dogecoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH",
+              "BIP72b" => "dogecoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH",
           ],
           "DAI" => [
-            "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "WBTC" => [
-            "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ]
         ];
         $invoice->setPaymentCodes($paymentCodes);
