@@ -154,7 +154,7 @@ class ExampleSdkInvoice
           "DOGE" => [
             "BIP72b" => "dogecoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH",
           ],
-          "DAI"=> [
+          "DAI" => [
             "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
           ],
           "WBTC" => [
@@ -177,17 +177,17 @@ class ExampleSdkInvoice
 
     private static function getInvoiceItemizedDetails()
     {
-      $exampleItemizedDetails1 = new ItemizedDetails;
-      $exampleItemizedDetails1->setAmount(5.0);
-      $exampleItemizedDetails1->setDescription('Item 1');
-      $exampleItemizedDetails1->setIsFee(false);
-      $exampleItemizedDetails2 = new ItemizedDetails;
-      $exampleItemizedDetails2->setAmount(15.0);
-      $exampleItemizedDetails2->setDescription('Item 2');
-      $exampleItemizedDetails2->setIsFee(false);
-      $itemizedDetails = array($exampleItemizedDetails1, $exampleItemizedDetails2);
+        $exampleItemizedDetails1 = new ItemizedDetails();
+        $exampleItemizedDetails1->setAmount(5.0);
+        $exampleItemizedDetails1->setDescription('Item 1');
+        $exampleItemizedDetails1->setIsFee(false);
+        $exampleItemizedDetails2 = new ItemizedDetails();
+        $exampleItemizedDetails2->setAmount(15.0);
+        $exampleItemizedDetails2->setDescription('Item 2');
+        $exampleItemizedDetails2->setIsFee(false);
+        $itemizedDetails = array($exampleItemizedDetails1, $exampleItemizedDetails2);
 
-      return $itemizedDetails;
+        return $itemizedDetails;
     }
 
     private static function getBuyerProvidedInfo(): BuyerProvidedInfo
