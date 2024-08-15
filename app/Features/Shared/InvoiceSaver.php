@@ -180,9 +180,9 @@ class InvoiceSaver
             }
 
             $invoiceItemizedDetail = new InvoiceItemizedDetail([
-                'amount' => $itemizedDetail['amount'],
-                'description' => $itemizedDetail['description'],
-                'is_fee' => $itemizedDetail['isFee'],
+                'amount' => $itemizedDetail->getAmount(),
+                'description' => $itemizedDetail->getDescription(),
+                'is_fee' => $itemizedDetail->getIsFee(),
             ]);
             $result[] = $invoiceItemizedDetail;
         }
@@ -268,9 +268,9 @@ class InvoiceSaver
         $invoicePaymentCurrency = new InvoicePaymentCurrency([
             'currency_code' => $currency,
             'total' => $amount,
-            'subtotal' => $bitpayInvoice->getPaymentSubTotals()->$currency ?? null,
-            'display_total' => $bitpayInvoice->getPaymentDisplayTotals()->$currency ?? null,
-            'display_subtotal' => $bitpayInvoice->getPaymentDisplaySubTotals()->$currency ?? null,
+            'subtotal' => $bitpayInvoice->getPaymentSubtotals()[$currency] ?? null,
+            'display_total' => $bitpayInvoice->getPaymentDisplayTotals()[$currency] ?? null,
+            'display_subtotal' => $bitpayInvoice->getPaymentDisplaySubTotals()[$currency] ?? null,
         ]);
         $invoicePaymentCurrency->invoicePayment()->associate($invoicePayment);
 
@@ -284,7 +284,7 @@ class InvoiceSaver
 
         $invoicePaymentCurrency->save();
 
-        $bitpayPaymentCodes = $bitpayInvoice->getPaymentCodes()->$currency ?? null;
+        $bitpayPaymentCodes = $bitpayInvoice->getPaymentCodes()[$currency] ?? null;
         if ($bitpayPaymentCodes) {
             $invoicePaymentCurrencyCodes = [];
             foreach ($bitpayPaymentCodes as $code => $value) {
@@ -389,7 +389,7 @@ class InvoiceSaver
         InvoicePaymentCurrency $invoicePaymentCurrency,
         string $currency
     ): array {
-        $bitpayExchangeRates = $bitpayInvoice->getExchangeRates()->$currency ?? null;
+        $bitpayExchangeRates = $bitpayInvoice->getExchangeRates()[$currency] ?? null;
         if (!$bitpayExchangeRates) {
             return [];
         }

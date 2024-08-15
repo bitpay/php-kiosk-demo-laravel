@@ -15,10 +15,10 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [8.0, 8.1, 8.2]
+        php-version: [ 8.1, 8.2 ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php-version }}
@@ -37,10 +37,10 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [ 8.0, 8.1, 8.2 ]
+        php-version: [ 8.1, 8.2 ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php-version }}
@@ -59,10 +59,10 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [ 8.0, 8.1, 8.2 ]
+        php-version: [ 8.1, 8.2 ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php-version }}

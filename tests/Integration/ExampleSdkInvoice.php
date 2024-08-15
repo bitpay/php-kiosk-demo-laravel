@@ -10,13 +10,13 @@ namespace Tests\Integration;
 
 use BitPaySDK\Model\Invoice\BuyerProvidedInfo;
 use BitPaySDK\Model\Invoice\Invoice;
+use BitPaySDK\Model\Invoice\ItemizedDetails;
 use BitPaySDK\Model\Invoice\MinerFees;
 use BitPaySDK\Model\Invoice\MinerFeesItem;
 use BitPaySDK\Model\Invoice\RefundInfo;
 use BitPaySDK\Model\Invoice\Shopper;
 use BitPaySDK\Model\Invoice\SupportedTransactionCurrencies;
 use BitPaySDK\Model\Invoice\SupportedTransactionCurrency;
-use BitPaySDK\Model\Invoice\TransactionDetails;
 use BitPaySDK\Model\Invoice\UniversalCodes;
 
 class ExampleSdkInvoice
@@ -39,7 +39,7 @@ class ExampleSdkInvoice
         $invoice->setItemCode('Test item code');
         $invoice->setPhysical(true);
         $invoice->setPaymentCurrencies(['BTC']);
-        $invoice->setAcceptanceWindow(1.1);
+        $invoice->setAcceptanceWindow(11);
         $invoice->setCloseURL('http://test.com');
         $invoice->setAutoRedirect(true);
         $invoice->setRefundAddresses(['Test refund address']);
@@ -48,10 +48,10 @@ class ExampleSdkInvoice
         $invoice->setStatus('pending');
         $invoice->setLowFeeDetected(false);
         $invoice->setInvoiceTime(1620734545366);
-        $invoice->setExpirationTime('1620734880748');
-        $invoice->setCurrentTime('1620733980807');
+        $invoice->setExpirationTime(1620734880748);
+        $invoice->setCurrentTime(1620733980807);
         $invoice->setTransactions(self::getTransactions());
-        $invoice->setExceptionStatus(false);
+        $invoice->setExceptionStatus('false');
         $invoice->setTargetConfirmations(6);
         $invoice->setRefundAddressRequestPending(false);
         $invoice->setBuyerProvidedEmail('test@email.com');
@@ -64,99 +64,130 @@ class ExampleSdkInvoice
         $invoice->setSelectedTransactionCurrency('BTC');
         $invoice->setBitpayIdRequired(true);
         $invoice->setForcedBuyerSelectedWallet('Forced Buyer Selected Wallet');
-        $invoice->setPaymentString('Payment string');
-        $invoice->setVerificationLink('http://test.com');
         $invoice->setIsCancelled(true);
         $invoice->setBuyerEmail('test@email.com');
         $invoice->setBuyerSms('Buyer sms');
         $invoice->setForcedBuyerSelectedTransactionCurrency('BTC');
 
-        $paymentTotals = new \stdClass();
-        $paymentTotals->BTC = 29800;
-        $paymentTotals->BCH = 700700;
-        $paymentTotals->ETH = 2406000000000000;
-        $paymentTotals->GUSD = 1000;
-        $paymentTotals->PAX = 10000000000000000000;
-        $paymentTotals->BUSD = 10000000000000000000;
-        $paymentTotals->USDC = 10000000;
-        $paymentTotals->XRP = 6668704;
-        $paymentTotals->DOGE = 2077327700;
-        $paymentTotals->DAI = 9990000000000000000;
-        $paymentTotals->WBTC = 1750;
+        $paymentTotals = [];
+        $paymentTotals['BTC'] = 29800;
+        $paymentTotals['BCH'] = 700700;
+        $paymentTotals['ETH'] = 2406000000000000;
+        $paymentTotals['GUSD'] = 1000;
+        $paymentTotals['PAX'] = 10000000000000000000;
+        $paymentTotals['BUSD'] = 10000000000000000000;
+        $paymentTotals['USDC'] = 10000000;
+        $paymentTotals['XRP'] = 6668704;
+        $paymentTotals['DOGE'] = 2077327700;
+        $paymentTotals['DAI'] = 9990000000000000000;
+        $paymentTotals['WBTC'] = 1750;
 
-        $paymentDisplayTotals = new \stdClass();
-        $paymentDisplayTotals->BTC = "0.000298";
-        $paymentDisplayTotals->BCH = "0.007007";
-        $paymentDisplayTotals->ETH = "0.002406";
-        $paymentDisplayTotals->GUSD = "10.00";
-        $paymentDisplayTotals->PAX = "10.00";
-        $paymentDisplayTotals->BUSD = "10.00";
-        $paymentDisplayTotals->USDC = "10.00";
-        $paymentDisplayTotals->XRP = "6.668704";
-        $paymentDisplayTotals->DOGE = "20.773277";
-        $paymentDisplayTotals->DAI = "9.99";
-        $paymentDisplayTotals->WBTC = "0.00017";
+        $paymentDisplayTotals = [];
+        $paymentDisplayTotals['BTC'] = "0.000298";
+        $paymentDisplayTotals['BCH'] = "0.007007";
+        $paymentDisplayTotals['ETH'] = "0.002406";
+        $paymentDisplayTotals['GUSD'] = "10.00";
+        $paymentDisplayTotals['PAX'] = "10.00";
+        $paymentDisplayTotals['BUSD'] = "10.00";
+        $paymentDisplayTotals['USDC'] = "10.00";
+        $paymentDisplayTotals['XRP'] = "6.668704";
+        $paymentDisplayTotals['DOGE'] = "20.773277";
+        $paymentDisplayTotals['DAI'] = "9.99";
+        $paymentDisplayTotals['WBTC'] = "0.00017";
 
-        $paymentSubTotals = new \stdClass();
-        $paymentSubTotals->BTC = 17500;
-        $paymentSubTotals->BCH = 700700;
-        $paymentSubTotals->ETH = 2406000000000000;
-        $paymentSubTotals->GUSD = 1000;
-        $paymentSubTotals->PAX = 10000000000000000000;
-        $paymentSubTotals->BUSD = 10000000000000000000;
-        $paymentSubTotals->USDC = 10000000;
-        $paymentSubTotals->XRP = 6668704;
-        $paymentSubTotals->DOGE = 2077327700;
-        $paymentSubTotals->DAI = 9990000000000000000;
-        $paymentSubTotals->WBTC = 1750;
+        $paymentSubTotals = [];
+        $paymentSubTotals['BTC'] = 17500;
+        $paymentSubTotals['BCH'] = 700700;
+        $paymentSubTotals['ETH'] = 2406000000000000;
+        $paymentSubTotals['GUSD'] = 1000;
+        $paymentSubTotals['PAX'] = 10000000000000000000;
+        $paymentSubTotals['BUSD'] = 10000000000000000000;
+        $paymentSubTotals['USDC'] = 10000000;
+        $paymentSubTotals['XRP'] = 6668704;
+        $paymentSubTotals['DOGE'] = 2077327700;
+        $paymentSubTotals['DAI'] = 9990000000000000000;
+        $paymentSubTotals['WBTC'] = 1750;
 
-        $paymentDisplaySubTotals = new \stdClass();
-        $paymentDisplaySubTotals->BTC = "0.000175";
-        $paymentDisplaySubTotals->BCH = "0.007007";
-        $paymentDisplaySubTotals->ETH = "0.002406";
-        $paymentDisplaySubTotals->GUSD = "10.00";
-        $paymentDisplaySubTotals->PAX = "10.00";
-        $paymentDisplaySubTotals->BUSD = "10.00";
-        $paymentDisplaySubTotals->USDC = "10.00";
-        $paymentDisplaySubTotals->XRP = "6.668704";
-        $paymentDisplaySubTotals->DOGE = "20.773277";
-        $paymentDisplaySubTotals->DAI = "9.99";
-        $paymentDisplaySubTotals->WBTC = "0.000175";
+        $paymentDisplaySubTotals = [];
+        $paymentDisplaySubTotals['BTC'] = "0.000175";
+        $paymentDisplaySubTotals['BCH'] = "0.007007";
+        $paymentDisplaySubTotals['ETH'] = "0.002406";
+        $paymentDisplaySubTotals['GUSD'] = "10.00";
+        $paymentDisplaySubTotals['PAX'] = "10.00";
+        $paymentDisplaySubTotals['BUSD'] = "10.00";
+        $paymentDisplaySubTotals['USDC'] = "10.00";
+        $paymentDisplaySubTotals['XRP'] = "6.668704";
+        $paymentDisplaySubTotals['DOGE'] = "20.773277";
+        $paymentDisplaySubTotals['DAI'] = "9.99";
+        $paymentDisplaySubTotals['WBTC'] = "0.000175";
 
         $invoice->setPaymentTotals($paymentTotals);
         $invoice->setPaymentDisplayTotals($paymentDisplayTotals);
         $invoice->setPaymentSubTotals($paymentSubTotals);
         $invoice->setPaymentDisplaySubTotals($paymentDisplaySubTotals);
-        $invoice->setItemizedDetails([
-            [
-                "amount" => 5,
-                "description" => "Item 1",
-                "isFee" => false
-            ],
-            [
-                "amount" => 15,
-                "description" => "Item 2",
-                "isFee" => false
-            ]
-        ]);
-
-        $paymentCodeBtc = new \stdClass();
-        $paymentCodeBtc->BIP72b = "bitcoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH";
-        $paymentCodes = new \stdClass();
-        $paymentCodes->BTC = $paymentCodeBtc;
+        $invoice->setItemizedDetails(self::getInvoiceItemizedDetails());
+        $paymentCodes = [
+          "BTC" => [
+              "BIP72b" => "bitcoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "BCH" => [
+              "BIP72b" => "bitcoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "ETH" => [
+              "EIP681" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "GUSD" => [
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "PAX" => [
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "BUSD" => [
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "USDC" => [
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "XRP" => [
+              "BIP72b" => "ripple:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH",
+          ],
+          "DOGE" => [
+              "BIP72b" => "dogecoin:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH",
+          ],
+          "DAI" => [
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ],
+          "WBTC" => [
+              "EIP681b" => "ethereum:?r=https://bitpay.com/i/KSnNNfoMDsbRzd1U9ypmVH"
+          ]
+        ];
         $invoice->setPaymentCodes($paymentCodes);
 
         $invoice->setBuyerProvidedInfo(self::getBuyerProvidedInfo());
-        $invoice->setTransactionDetails(self::getTransactionDetails());
         $invoice->setUniversalCodes(self::getUniversalCodes());
         $invoice->setSupportedTransactionCurrencies(self::getSupportedTransactionCurrencies());
         $invoice->setMinerFees(self::getMinerFees());
         $invoice->setShopper(self::getShopper());
         $invoice->setRefundInfo(self::getRefundInfo());
-        $invoice->setExchangeRates(self::getExchangeRates());
+        $invoice->setExchangeRates(self::getExampleExchangeRates());
         $invoice->setUrl('https://test.bitpay.com/invoice?id=YUVJ8caCU1DLnUoc4nug4iN');
 
         return $invoice;
+    }
+
+    private static function getInvoiceItemizedDetails()
+    {
+        $exampleItemizedDetails1 = new ItemizedDetails();
+        $exampleItemizedDetails1->setAmount(5.0);
+        $exampleItemizedDetails1->setDescription('Item 1');
+        $exampleItemizedDetails1->setIsFee(false);
+        $exampleItemizedDetails2 = new ItemizedDetails();
+        $exampleItemizedDetails2->setAmount(15.0);
+        $exampleItemizedDetails2->setDescription('Item 2');
+        $exampleItemizedDetails2->setIsFee(false);
+        $itemizedDetails = array($exampleItemizedDetails1, $exampleItemizedDetails2);
+
+        return $itemizedDetails;
     }
 
     private static function getBuyerProvidedInfo(): BuyerProvidedInfo
@@ -171,16 +202,6 @@ class ExampleSdkInvoice
         $info->setSmsVerified(true);
 
         return $info;
-    }
-
-    private static function getTransactionDetails(): TransactionDetails
-    {
-        $transactionDetails = new TransactionDetails();
-        $transactionDetails->setAmount(12.2);
-        $transactionDetails->setDescription('transaction description');
-        $transactionDetails->setIsFee(true);
-
-        return $transactionDetails;
     }
 
     private static function getExampleExchangeRates(): array
@@ -357,7 +378,7 @@ class ExampleSdkInvoice
         $minerFees = new MinerFees();
         $item = new MinerFeesItem();
         $item->setSatoshisPerByte(1.0);
-        $item->setTotalFee(100.0);
+        $item->setTotalFee(100);
         $item->setFiatAmount(0.02);
 
         $minerFees->setBTC($item);
