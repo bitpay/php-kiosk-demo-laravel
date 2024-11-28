@@ -6,6 +6,7 @@ namespace Tests\Unit\Features\Invoice\UpdateInvoice;
 
 use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Features\Invoice\UpdateInvoice\BitPaySignatureValidator;
+use App\Shared\Exceptions\SignatureVerificationFailed;
 use Tests\Unit\AbstractUnitTestCase;
 
 class ValidateBitPayWebhookTest extends AbstractUnitTestCase
@@ -22,9 +23,7 @@ class ValidateBitPayWebhookTest extends AbstractUnitTestCase
 
         $validator = new BitPaySignatureValidator($bitpayConfig);
         $this->expectException(\RuntimeException::class);
-        $validator->execute([], [
-            'x-signature' => 'test-signature',
-        ]);
+        $validator->execute([], []);
     }
 
     /**
@@ -33,8 +32,12 @@ class ValidateBitPayWebhookTest extends AbstractUnitTestCase
     public function it_should_return_error_when_signature_header_is_missing(): void
     {
         $bitpayConfig = $this->createMock(BitPayConfigurationInterface::class);
+        $bitpayConfig->expects($this->once())
+            ->method('getToken')
+            ->willReturn('test-token');
+
         $validator = new BitPaySignatureValidator($bitpayConfig);
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(SignatureVerificationFailed::class);
 
         $validator->execute([], []);
     }
@@ -49,10 +52,10 @@ class ValidateBitPayWebhookTest extends AbstractUnitTestCase
             ->method('getToken')
             ->willReturn('test-token');
 
-        $headers = ['x-signature' => 'invalid-signature'];
+        $headers = ['x-signature' => ['invalid-signature']];
 
         $validator = new BitPaySignatureValidator($bitpayConfig);
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(SignatureVerificationFailed::class);
         $validator->execute([], $headers);
     }
 
