@@ -14,6 +14,7 @@ use App\Features\Shared\Logger;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Shared\Exceptions\SignatureVerificationFailed;
 
 class UpdateInvoiceController extends Controller
 {
@@ -30,17 +31,19 @@ class UpdateInvoiceController extends Controller
     {
         $this->logger->info('IPN_RECEIVED', 'Received IPN', $request->request->all());
 
-        /** @var array $data */
-        $data = $request->request->get('data');
-        $event = $request->request->get('event');
+        $payload = json_decode($request->getContent(), true);
+        $data = $payload['data'];
+        $event = $payload['event'];
 
         $data['uuid'] = $uuid;
         $data['event'] = $event['name'] ?? null;
 
         try {
-            $this->updateInvoice->execute($uuid, $data);
+            $this->updateInvoice->execute($uuid, $data, $request->headers->all());
         } catch (MissingInvoice $e) {
             return response(null, Response::HTTP_NOT_FOUND);
+        } catch (SignatureVerificationFailed $e) {
+            return response($e->getMessage(), Response::HTTP_UNAUTHORIZED);
         } catch (\Exception $e) {
             return response('Unable to process update', Response::HTTP_BAD_REQUEST);
         }

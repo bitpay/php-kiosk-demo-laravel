@@ -20,17 +20,23 @@ final class UpdateInvoiceIpnValidator implements UpdateInvoiceValidator
 
     private UpdateInvoiceValidator $updateInvoiceValidator;
     private Logger $logger;
+    private BitPaySignatureValidator $bitPaySignatureValidator;
 
-    public function __construct(UpdateInvoiceValidator $updateInvoiceValidator, Logger $logger)
-    {
+    public function __construct(
+        UpdateInvoiceValidator $updateInvoiceValidator,
+        Logger $logger,
+        BitPaySignatureValidator $bitPaySignatureValidator
+    ) {
         $this->updateInvoiceValidator = $updateInvoiceValidator;
         $this->logger = $logger;
+        $this->bitPaySignatureValidator = $bitPaySignatureValidator;
     }
 
-    public function execute(?array $data, ?BitPayInvoice $bitPayInvoice): void
+    public function execute(?array $data, ?BitPayInvoice $bitPayInvoice, ?array $headers): void
     {
         try {
-            $this->updateInvoiceValidator->execute($data, $bitPayInvoice);
+            $this->bitPaySignatureValidator->execute($data, $headers);
+            $this->updateInvoiceValidator->execute($data, $bitPayInvoice, $headers);
 
             if (!$bitPayInvoice) {
                 throw new ValidationFailed(self::MISSING_BITPAY_MESSAGE);
