@@ -69,6 +69,9 @@ class UpdateInvoiceUsingBitPayIpn
 
             $this->sendUpdateInvoiceNotification->execute($invoice, $data['event'] ?? null);
         } catch (SignatureVerificationFailed $e) {
+            $this->logger->error('SIGNATURE_VERIFICATION_FAIL', $e->getMessage(), [
+                'id' => $invoice->id
+            ]);
             throw $e;
         } catch (\Exception | \TypeError $e) {
             $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
