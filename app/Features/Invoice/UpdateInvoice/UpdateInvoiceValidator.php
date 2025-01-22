@@ -16,5 +16,5 @@ interface UpdateInvoiceValidator
     /**
      * @throws ValidationFailed
      */
-    public function execute(?array $data, ?BitPayInvoice $bitPayInvoice): void;
+    public function execute(?array $data, ?BitPayInvoice $bitPayInvoice, array $headers): void;
 }

@@ -16,6 +16,7 @@ use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\InvoicePaymentCurrency;
 use App\Models\Invoice\InvoiceRepositoryInterface;
+use App\Shared\Exceptions\SignatureVerificationFailed;
 
 class UpdateInvoiceUsingBitPayIpn
 {
@@ -45,7 +46,7 @@ class UpdateInvoiceUsingBitPayIpn
         $this->bitPayConfiguration = $bitPayConfiguration;
     }
 
-    public function execute(string $uuid, array $data): void
+    public function execute(string $uuid, array $data, array $headers): void
     {
         $invoice = $this->invoiceRepository->findOneByUuid($uuid);
         if (!$invoice) {
@@ -54,6 +55,7 @@ class UpdateInvoiceUsingBitPayIpn
 
         try {
             $client = $this->bitPayClientFactory->create();
+
             $bitPayInvoice = $client->getInvoice(
                 $invoice->getBitpayId(),
                 $this->bitPayConfiguration->getFacade(),
@@ -61,11 +63,16 @@ class UpdateInvoiceUsingBitPayIpn
             );
 
             $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
-            $this->updateInvoiceValidator->execute($data, $bitPayInvoice);
+            $this->updateInvoiceValidator->execute($data, $bitPayInvoice, $headers);
 
             $this->updateInvoice($invoice, $updateInvoiceData);
 
             $this->sendUpdateInvoiceNotification->execute($invoice, $data['event'] ?? null);
+        } catch (SignatureVerificationFailed $e) {
+            $this->logger->error('SIGNATURE_VERIFICATION_FAIL', $e->getMessage(), [
+                'id' => $invoice->id
+            ]);
+            throw $e;
         } catch (\Exception | \TypeError $e) {
             $this->logger->error('INVOICE_UPDATE_FAIL', 'Failed to update invoice', [
                 'id' => $invoice->id

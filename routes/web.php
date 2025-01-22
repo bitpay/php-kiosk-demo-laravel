@@ -23,4 +23,3 @@ Route::get('/invoices', [GetInvoicesController::class, 'execute'])->name('getInv
 Route::post('/invoices', [CreateInvoiceController::class, 'execute'])->name('createInvoice');
 Route::get('/invoices/{id}', [GetInvoiceViewController::class, 'execute'])->name('invoiceView');
 Route::post('/invoices/{uuid}', [UpdateInvoiceController::class, 'execute'])->name('updateInvoice');
-

@@ -17,6 +17,8 @@ use App\Features\Invoice\UpdateInvoice\BaseUpdateInvoiceValidator;
 use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceIpnValidator;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceValidator;
+use App\Features\Invoice\UpdateInvoice\BitPaySignatureValidator;
+use App\Features\Invoice\UpdateInvoice\BitPaySignatureValidatorInterface;
 use App\Features\Shared\Logger;
 use App\Features\Shared\SseConfiguration;
 use App\Features\Shared\UrlProvider;
@@ -88,11 +90,17 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            BitPaySignatureValidatorInterface::class,
+            BitPaySignatureValidator::class
+        );
+
+        $this->app->bind(
             UpdateInvoiceIpnValidator::class,
             function () {
                 return new UpdateInvoiceIpnValidator(
                     $this->app->make(BaseUpdateInvoiceValidator::class),
-                    $this->app->make(Logger::class)
+                    $this->app->make(Logger::class),
+                    $this->app->make(BitPaySignatureValidator::class)
                 );
             }
         );
