@@ -17,7 +17,7 @@ class Design
     /**
      * Design constructor.
      * @param Hero $hero
-     * @param String $logo
+     * @param string $logo
      * @param PosData $posData
      */
     public function __construct(Hero $hero, string $logo, PosData $posData)

@@ -11,7 +11,7 @@ namespace App\Models\Invoice;
 use App\Models\AppModel;
 
 /**
- * @property string|null name,
+ * @property string|null name
  * @property string|null phone_number
  * @property string|null selected_wallet
  * @property string|null email_address
