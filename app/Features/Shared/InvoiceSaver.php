@@ -173,7 +173,7 @@ class InvoiceSaver
         }
 
         $result = [];
-        /** @var array $itemizedDetail */
+        /** @var \BitPaySDK\Model\Invoice\ItemizedDetails $itemizedDetail */
         foreach ($bitPayItemizedDetails as $itemizedDetail) {
             if (empty($itemizedDetail)) {
                 continue;
