@@ -42,7 +42,9 @@ final class UpdateInvoiceIpnValidator implements UpdateInvoiceValidator
                 throw new ValidationFailed(self::MISSING_BITPAY_MESSAGE);
             }
 
+            $data = $data['data'];
             $bitPayId = $data['id'] ?? null;
+
             if (!$bitPayId || (string)$bitPayId !== (string)$bitPayInvoice->getId()) {
                 throw new ValidationFailed(self::WRONG_BITPAY_INVOICE_ID_MESSAGE);
             }

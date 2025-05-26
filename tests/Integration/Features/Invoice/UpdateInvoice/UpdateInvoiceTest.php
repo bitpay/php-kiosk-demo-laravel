@@ -40,7 +40,7 @@ class UpdateInvoiceTest extends IntegrationTestCase
             $mock->shouldReceive('create')->andReturn(new class ('', '') extends PosClient {
                 public function getInvoice(
                     string $invoiceId,
-                    string $facade = Facade::Merchant,
+                    string $facade = Facade::MERCHANT,
                     bool $signRequest = true
                 ): Invoice {
                     $invoice = new Invoice();
@@ -69,8 +69,8 @@ class UpdateInvoiceTest extends IntegrationTestCase
 
         Assert::assertEquals(ExampleInvoice::TOKEN, $invoice->token);
         Assert::assertEquals('someBitpayId', $invoice->bitpay_id);
-        Assert::assertEquals('https://test.bitpay.com/invoice?id=MV9fy5iNDkqrg4qrfYpw75', $invoice->bitpay_url);
-        // phpcs:disable Generic.Files.LineLength.TooLong
+        Assert::assertEquals('https://test.bitpay.com/invoice?id=someBitpayId', $invoice->bitpay_url);
+        // phpcs:ignore Generic.Files.LineLength.TooLong
         Assert::assertEquals("{\"store\":\"store-1\",\"register\":\"2\",\"reg_transaction_no\":\"87678\",\"price\":\"76.70\"}", $invoice->pos_data_json);
         Assert::assertEquals('expired', $invoice->status);
         Assert::assertEquals(76.7, $invoice->price);
@@ -102,7 +102,7 @@ class UpdateInvoiceTest extends IntegrationTestCase
             $mock->shouldReceive('create')->andReturn(new class ('', '') extends PosClient {
                 public function getInvoice(
                     string $invoiceId,
-                    string $facade = Facade::Merchant,
+                    string $facade = Facade::MERCHANT,
                     bool $signRequest = true
                 ): Invoice {
                     $invoice = new Invoice();
@@ -149,7 +149,7 @@ class UpdateInvoiceTest extends IntegrationTestCase
             $mock->shouldReceive('create')->andReturn(new class ('', '') extends PosClient {
                 public function getInvoice(
                     string $invoiceId,
-                    string $facade = Facade::Merchant,
+                    string $facade = Facade::MERCHANT,
                     bool $signRequest = true
                 ): Invoice {
                     $invoice = new Invoice();
@@ -197,7 +197,7 @@ class UpdateInvoiceTest extends IntegrationTestCase
             $mock->shouldReceive('create')->andReturn(new class ('', '') extends PosClient {
                 public function getInvoice(
                     string $invoiceId,
-                    string $facade = Facade::Merchant,
+                    string $facade = Facade::MERCHANT,
                     bool $signRequest = true
                 ): Invoice {
                     $invoice = new Invoice();

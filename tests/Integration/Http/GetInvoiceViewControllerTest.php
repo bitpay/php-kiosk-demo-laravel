@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Tests\ExampleInvoice;
 use Tests\Integration\IntegrationTestCase;
 
-class GetInvoiceViewControllerTestCase extends IntegrationTestCase
+class GetInvoiceViewControllerTest extends IntegrationTestCase
 {
     /**
      * @test

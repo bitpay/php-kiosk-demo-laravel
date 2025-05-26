@@ -46,7 +46,7 @@ class UpdateInvoiceUsingBitPayIpn
         $this->bitPayConfiguration = $bitPayConfiguration;
     }
 
-    public function execute(string $uuid, array $data, array $headers): void
+    public function execute(string $uuid, array $payload, array $headers): void
     {
         $invoice = $this->invoiceRepository->findOneByUuid($uuid);
         if (!$invoice) {
@@ -62,8 +62,15 @@ class UpdateInvoiceUsingBitPayIpn
                 $this->bitPayConfiguration->isSignRequest()
             );
 
+            $this->updateInvoiceValidator->execute($payload, $bitPayInvoice, $headers);
+
+            $event = $payload['event'];
+            $data = $payload['data'];
+
+            $data['uuid'] = $uuid;
+            $data['event'] = $event['name'];
+
             $updateInvoiceData = $this->bitPayUpdateMapper->execute($data)->toArray();
-            $this->updateInvoiceValidator->execute($data, $bitPayInvoice, $headers);
 
             $this->updateInvoice($invoice, $updateInvoiceData);
 

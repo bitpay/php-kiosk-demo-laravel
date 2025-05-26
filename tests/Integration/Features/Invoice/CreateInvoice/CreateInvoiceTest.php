@@ -19,7 +19,7 @@ use Tests\ExampleInvoice;
 use Tests\Integration\ExampleSdkInvoice;
 use Tests\Integration\IntegrationTestCase;
 
-class CreateInvoiceTestCase extends IntegrationTestCase
+class CreateInvoiceTest extends IntegrationTestCase
 {
     /**
      * @test

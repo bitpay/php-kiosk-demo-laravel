@@ -16,6 +16,7 @@ class ValidateBitPayWebhookTest extends AbstractUnitTestCase
      */
     public function it_should_return_error_when_signing_key_is_missing(): void
     {
+        /** @var BitPayConfigurationInterface|\PHPUnit\Framework\MockObject\MockObject $bitpayConfig */
         $bitpayConfig = $this->createMock(BitPayConfigurationInterface::class);
         $bitpayConfig->expects($this->once())
             ->method('getToken')
@@ -31,6 +32,7 @@ class ValidateBitPayWebhookTest extends AbstractUnitTestCase
      */
     public function it_should_return_error_when_signature_header_is_missing(): void
     {
+        /** @var BitPayConfigurationInterface|\PHPUnit\Framework\MockObject\MockObject $bitpayConfig */
         $bitpayConfig = $this->createMock(BitPayConfigurationInterface::class);
         $bitpayConfig->expects($this->once())
             ->method('getToken')
@@ -47,6 +49,7 @@ class ValidateBitPayWebhookTest extends AbstractUnitTestCase
      */
     public function it_should_return_error_when_signature_does_not_match(): void
     {
+        /** @var BitPayConfigurationInterface|\PHPUnit\Framework\MockObject\MockObject $bitpayConfig */
         $bitpayConfig = $this->createMock(BitPayConfigurationInterface::class);
         $bitpayConfig->expects($this->once())
             ->method('getToken')
@@ -67,6 +70,7 @@ class ValidateBitPayWebhookTest extends AbstractUnitTestCase
         $token = 'test-token';
         $testContent = ['test-content'];
 
+        /** @var BitPayConfigurationInterface|\PHPUnit\Framework\MockObject\MockObject $bitpayConfig */
         $bitpayConfig = $this->createMock(BitPayConfigurationInterface::class);
         $bitpayConfig->expects($this->once())
             ->method('getToken')

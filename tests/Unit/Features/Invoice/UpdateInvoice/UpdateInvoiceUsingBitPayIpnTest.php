@@ -12,9 +12,7 @@ use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceNotification;
 use App\Features\Shared\Configuration\BitPayConfigurationInterface;
 use App\Shared\Exceptions\MissingInvoice;
 use App\Features\Invoice\UpdateInvoice\BitPayUpdateMapper;
-use App\Features\Invoice\UpdateInvoice\SendUpdateInvoiceEventStream;
 use App\Features\Invoice\UpdateInvoice\UpdatedInvoiceDto;
-use App\Features\Invoice\UpdateInvoice\UpdateInvoiceEventType;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceUsingBitPayIpn;
 use App\Features\Invoice\UpdateInvoice\UpdateInvoiceValidator;
 use App\Features\Shared\Logger;
@@ -28,7 +26,7 @@ use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Unit\AbstractUnitTestCase;
 
-class UpdateInvoiceUsingBitPayIpnTestCase extends AbstractUnitTestCase
+class UpdateInvoiceUsingBitPayIpnTest extends AbstractUnitTestCase
 {
     /**
      * @test
@@ -48,7 +46,7 @@ class UpdateInvoiceUsingBitPayIpnTestCase extends AbstractUnitTestCase
             $this->getSendUpdateInvoiceEventStream(),
             $this->getLogger()
         );
-        $testedClass->execute('12312', ['any' => 'data']);
+        $testedClass->execute('12312', ['any' => 'data'], []);
     }
 
     /**
@@ -58,12 +56,13 @@ class UpdateInvoiceUsingBitPayIpnTestCase extends AbstractUnitTestCase
     {
         // given
         $repository = $this->getRepository();
-        $client = $this->createStub(Client::class);
+        $client = $this->createMock(Client::class);
         $clientFactory = $this->getClientFactory();
         $bitPayConfiguration = $this->getBitPayConfiguration();
         $bitPayUpdateMapper = $this->getUpdateMapper();
         $invoiceValidator = $this->getInvoiceValidator();
         $sendInvoiceEventStream = $this->getSendUpdateInvoiceEventStream();
+        /** @var Logger|MockObject $logger */
         $logger = $this->createMock(Logger::class);
         $invoice = $this->getMockBuilder(Invoice::class)->disableOriginalConstructor()->getMock();
         $invoicePayment = $this->getMockBuilder(InvoicePayment::class)->disableOriginalConstructor()->getMock();
@@ -117,7 +116,11 @@ class UpdateInvoiceUsingBitPayIpnTestCase extends AbstractUnitTestCase
             $sendInvoiceEventStream,
             $logger
         );
-        $testedClass->execute($uuid, ['any' => 'data', 'event' => 'invoice_expired']);
+        $testedClass->execute(
+            $uuid,
+            ['data' => ['id' => $bitPayInvoiceId], 'event' => ['name' => 'invoice_expired']],
+            []
+        );
     }
 
     private function getRepository(): InvoiceRepositoryInterface|MockObject
