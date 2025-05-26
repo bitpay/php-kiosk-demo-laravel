@@ -9,7 +9,7 @@ bitpay:
       bgColor: "#100000"
       title: "BitPay Demo ts"
       body: "Mattis amet hendrerit dolor, quisque lorem pharetra. Pellentesque lacus nisi urna, arcu sociis eu. Orci vel lectus nisl eget eget ut consectetur. Sit justo viverra non adipisicing elit distinctio."
-    logo: "https://via.placeholder.com/300x75?text=LOGO"
+    logo: "/logo.svg"
     posData:
       fields:
         - type: "select"
