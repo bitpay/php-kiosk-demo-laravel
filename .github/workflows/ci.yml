@@ -30,7 +30,8 @@ jobs:
           php_version: ${{ matrix.php-version }}
           php_extensions: bcmath gmp xdebug
           testsuite: Unit
-          version: 9
+          version: 10.5
+          args: --no-coverage
 
   integration-tests:
     runs-on: ubuntu-latest
@@ -52,7 +53,8 @@ jobs:
           php_version: ${{ matrix.php-version }}
           php_extensions: bcmath gmp xdebug
           testsuite: Integration
-          version: 9
+          version: 10.5
+          args: --no-coverage
 
   phpcs:
     runs-on: ubuntu-latest
