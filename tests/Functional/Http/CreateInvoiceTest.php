@@ -13,7 +13,7 @@ use App\Features\Shared\Configuration\Mode;
 use App\Models\Invoice\InvoiceRepositoryInterface;
 use Tests\Functional\AbstractFunctionalTestCase;
 
-class CreateInvoiceTestCase extends AbstractFunctionalTestCase
+class CreateInvoiceTest extends AbstractFunctionalTestCase
 {
     /**
      * @test

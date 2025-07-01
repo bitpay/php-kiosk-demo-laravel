@@ -12,7 +12,7 @@ use App\Shared\Exceptions\ValidationFailed;
 use App\Features\Invoice\UpdateInvoice\BaseUpdateInvoiceValidator;
 use Tests\Unit\AbstractUnitTestCase;
 
-class BaseUpdateInvoiceValidatorTestCase extends AbstractUnitTestCase
+class BaseUpdateInvoiceValidatorTest extends AbstractUnitTestCase
 {
     /**
      * @test
@@ -22,6 +22,6 @@ class BaseUpdateInvoiceValidatorTestCase extends AbstractUnitTestCase
         $this->expectException(ValidationFailed::class);
 
         $testedClass = new BaseUpdateInvoiceValidator();
-        $testedClass->execute(null, null);
+        $testedClass->execute(null, null, []);
     }
 }

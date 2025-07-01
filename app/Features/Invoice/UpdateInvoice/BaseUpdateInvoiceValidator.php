@@ -13,9 +13,9 @@ use BitPaySDK\Model\Invoice\Invoice as BitPayInvoice;
 
 final class BaseUpdateInvoiceValidator implements UpdateInvoiceValidator
 {
-    public function execute(?array $data, ?BitPayInvoice $bitPayInvoice, array $headers): void
+    public function execute(?array $payload, ?BitPayInvoice $bitPayInvoice, array $headers): void
     {
-        if (!$data) {
+        if (!$payload) {
             throw new ValidationFailed('Missing data');
         }
     }

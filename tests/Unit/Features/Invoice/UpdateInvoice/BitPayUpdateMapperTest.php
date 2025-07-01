@@ -23,7 +23,7 @@ class BitPayUpdateMapperTest extends TestCase
         $fileData = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'bitPayUpdate.json');
         $data = json_decode($fileData, true, 512, JSON_THROW_ON_ERROR);
 
-        $mappedData = $this->getTestedClass()->execute($data);
+        $mappedData = $this->getTestedClass()->execute($data['data']);
 
         $expected = [
             'bitpay_id' => 'MV9fy5iNDkqrg4qrfYpw75',

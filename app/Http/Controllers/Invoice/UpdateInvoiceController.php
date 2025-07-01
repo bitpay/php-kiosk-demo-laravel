@@ -32,14 +32,9 @@ class UpdateInvoiceController extends Controller
         $this->logger->info('IPN_RECEIVED', 'Received IPN', $request->request->all());
 
         $payload = json_decode($request->getContent(), true);
-        $data = $payload['data'];
-        $event = $payload['event'];
-
-        $data['uuid'] = $uuid;
-        $data['event'] = $event['name'] ?? null;
 
         try {
-            $this->updateInvoice->execute($uuid, $data, $request->headers->all());
+            $this->updateInvoice->execute($uuid, $payload, $request->headers->all());
         } catch (MissingInvoice $e) {
             return response(null, Response::HTTP_NOT_FOUND);
         } catch (SignatureVerificationFailed $e) {

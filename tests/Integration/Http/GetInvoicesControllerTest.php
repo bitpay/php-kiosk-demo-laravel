@@ -11,7 +11,7 @@ namespace Tests\Integration\Http;
 use Tests\ExampleInvoice;
 use Tests\Integration\IntegrationTestCase;
 
-class GetInvoicesControllerTestCase extends IntegrationTestCase
+class GetInvoicesControllerTest extends IntegrationTestCase
 {
     /**
      * @test
