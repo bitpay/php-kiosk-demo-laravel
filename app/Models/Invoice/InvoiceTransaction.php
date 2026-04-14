@@ -13,11 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property BelongsTo invoice_id
- * @property int|null amount
- * @property int|null confirmations
- * @property \Datetime|null received_time
- * @property string|null txid
+ * @property BelongsTo $invoice
+ * @property int|null $amount
+ * @property int|null $confirmations
+ * @property \Datetime|null $received_time
+ * @property string|null $txid
  */
 class InvoiceTransaction extends AppModel
 {

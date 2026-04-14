@@ -11,8 +11,8 @@ namespace App\Models\Invoice;
 use App\Models\AppModel;
 
 /**
- * @property bool enabled
- * @property string|null reason
+ * @property bool $enabled
+ * @property string|null $reason
  */
 class InvoicePaymentCurrencySupportedTransactionCurrency extends AppModel
 {

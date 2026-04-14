@@ -12,8 +12,8 @@ use App\Models\AppModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property string|null code
- * @property string|null code_url
+ * @property string|null $code
+ * @property string|null $code_url
  */
 class InvoicePaymentCurrencyCode extends AppModel
 {

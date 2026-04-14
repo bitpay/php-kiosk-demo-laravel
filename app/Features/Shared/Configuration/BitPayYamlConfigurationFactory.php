@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Features\Shared\Configuration;
 
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class BitPayYamlConfigurationFactory implements BitPayConfigurationFactoryInterface
@@ -18,9 +18,9 @@ class BitPayYamlConfigurationFactory implements BitPayConfigurationFactoryInterf
         'application-example.yaml'
     ];
 
-    private SerializerInterface $serializer;
+    private DenormalizerInterface $serializer;
 
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(DenormalizerInterface $serializer)
     {
         $this->serializer = $serializer;
     }

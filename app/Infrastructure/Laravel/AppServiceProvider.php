@@ -36,6 +36,7 @@ use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\YamlEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -110,7 +111,7 @@ class AppServiceProvider extends ServiceProvider
             UpdateInvoiceIpnValidator::class
         );
 
-        $this->app->bind(
+        $this->app->singleton(
             SerializerInterface::class,
             function () {
                 $phpDocExtractor = new PhpDocExtractor();
@@ -124,6 +125,13 @@ class AppServiceProvider extends ServiceProvider
                     new ArrayDenormalizer(),
                 ];
                 return new Serializer($normalizer, [new YamlEncoder()]);
+            }
+        );
+
+        $this->app->bind(
+            DenormalizerInterface::class,
+            function () {
+                return $this->app->make(SerializerInterface::class);
             }
         );
 

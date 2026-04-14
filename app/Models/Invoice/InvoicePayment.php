@@ -14,14 +14,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property float|null amount_paid
- * @property float|null display_amount_paid
- * @property float|null underpaid_amount
- * @property float|null overpaid_amount
- * @property bool|null non_pay_pro_payment_received
- * @property string|null transaction_currency
- * @property string|null universal_codes_payment_string
- * @property string|null universal_codes_verification_link
+ * @property float|null $amount_paid
+ * @property float|null $display_amount_paid
+ * @property float|null $underpaid_amount
+ * @property float|null $overpaid_amount
+ * @property bool|null $non_pay_pro_payment_received
+ * @property string|null $transaction_currency
+ * @property string|null $universal_codes_payment_string
+ * @property string|null $universal_codes_verification_link
  */
 class InvoicePayment extends AppModel
 {

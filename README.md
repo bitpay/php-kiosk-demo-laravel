@@ -18,7 +18,7 @@ uses an embedded H2 database to make it easy to start. Feel free to use other RD
 ## Prerequisites
 
 - BitPay Account
-- PHP 8.1
+- PHP 8.2
 
 ## Configuration
 

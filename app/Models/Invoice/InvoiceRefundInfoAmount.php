@@ -12,9 +12,9 @@ use App\Models\AppModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property BelongsTo invoice_refund_info_id
- * @property string currency_code
- * @property float amount
+ * @property BelongsTo $invoice_refund_info
+ * @property string $currency_code
+ * @property float $amount
  */
 class InvoiceRefundInfoAmount extends AppModel
 {

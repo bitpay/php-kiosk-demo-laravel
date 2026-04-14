@@ -11,9 +11,9 @@ namespace App\Models\Invoice;
 use App\Models\AppModel;
 
 /**
- * @property int|null satoshis_per_byte
- * @property float|null total_fee
- * @property float|null fiat_amount
+ * @property int|null $satoshis_per_byte
+ * @property float|null $total_fee
+ * @property float|null $fiat_amount
  */
 class InvoicePaymentCurrencyMinerFee extends AppModel
 {
