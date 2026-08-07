@@ -14,41 +14,41 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property null|int id
- * @property null|string pos_data_json
- * @property null|float price
- * @property null|string currency_code
- * @property null|string bitpay_id
- * @property null|string status
- * @property null|\Datetime created_date
- * @property null|\Datetime expiration_time
- * @property null|string bitpay_order_id
- * @property null|string facade_type
- * @property null|string bitpay_guid
- * @property null|string exception_status
- * @property null|string bitpay_url
- * @property null|string redirect_url
- * @property null|string close_url
- * @property null|int acceptance_window
- * @property null|string token
- * @property null|string merchant_name
- * @property null|string item_description
- * @property null|string bill_id
- * @property null|bool target_confirmations
- * @property null|bool low_fee_detected
- * @property null|bool auto_redirect
- * @property null|string shopper_user
- * @property null|string json_pay_pro_required
- * @property null|string bitpay_id_required
- * @property null|bool is_cancelled
- * @property null|string transaction_speed
- * @property string|null url
+ * @property null|int $id
+ * @property null|string $pos_data_json
+ * @property null|float $price
+ * @property null|string $currency_code
+ * @property null|string $bitpay_id
+ * @property null|string $status
+ * @property null|\Datetime $created_date
+ * @property null|\Datetime $expiration_time
+ * @property null|string $bitpay_order_id
+ * @property null|string $facade_type
+ * @property null|string $bitpay_guid
+ * @property null|string $exception_status
+ * @property null|string $bitpay_url
+ * @property null|string $redirect_url
+ * @property null|string $close_url
+ * @property null|int $acceptance_window
+ * @property null|string $token
+ * @property null|string $merchant_name
+ * @property null|string $item_description
+ * @property null|string $bill_id
+ * @property null|bool $target_confirmations
+ * @property null|bool $low_fee_detected
+ * @property null|bool $auto_redirect
+ * @property null|string $shopper_user
+ * @property null|string $json_pay_pro_required
+ * @property null|string $bitpay_id_required
+ * @property null|bool $is_cancelled
+ * @property null|string $transaction_speed
+ * @property string|null $url
  * @property string|null $uuid
- * @property BelongsTo invoice_payment
- * @property BelongsTo invoice_buyer
- * @property BelongsTo invoice_refund
- * @property HasMany invoice_transactions
- * @property HasMany invoice_itemized_details
+ * @property BelongsTo $invoice_payment
+ * @property BelongsTo $invoice_buyer
+ * @property BelongsTo $invoice_refund
+ * @property HasMany $invoice_transactions
+ * @property HasMany $invoice_itemized_details
  */
 class Invoice extends AppModel
 {

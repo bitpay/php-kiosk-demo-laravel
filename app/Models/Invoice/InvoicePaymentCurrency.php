@@ -14,14 +14,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property BelongsTo invoice_payment_id
- * @property BelongsTo supported_transaction_currency_id
- * @property BelongsTo miner_fee_id
- * @property string currency_code
- * @property string total
- * @property string subtotal
- * @property string display_total
- * @property string display_subtotal
+ * @property BelongsTo $invoice_payment_id
+ * @property BelongsTo $supported_transaction_currency_id
+ * @property BelongsTo $miner_fee_id
+ * @property string $currency_code
+ * @property string $total
+ * @property string $subtotal
+ * @property string $display_total
+ * @property string $display_subtotal
  */
 class InvoicePaymentCurrency extends AppModel
 {

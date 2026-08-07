@@ -12,8 +12,8 @@ use App\Models\AppModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property string|null currency_code
- * @property string|null support_request
+ * @property string|null $currency_code
+ * @property string|null $support_request
  */
 class InvoiceRefundInfo extends AppModel
 {

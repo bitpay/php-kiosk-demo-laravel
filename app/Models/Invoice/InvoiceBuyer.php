@@ -12,18 +12,18 @@ use App\Models\AppModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property string|null name,
- * @property string|null address1,
- * @property string|null address2,
- * @property string|null city,
- * @property string|null region,
- * @property string|null postal_code,
- * @property string|null country,
- * @property string|null email,
- * @property string|null phone,
- * @property string|null notify,
- * @property string|null buyer_provided_email,
- * @property BelongsTo invoice_buyer_provided_info_id,
+ * @property string|null $name
+ * @property string|null $address1
+ * @property string|null $address2
+ * @property string|null $city
+ * @property string|null $region
+ * @property string|null $postal_code
+ * @property string|null $country
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string|null $notify
+ * @property string|null $buyer_provided_email
+ * @property BelongsTo $invoice_buyer_provided_info_id
  *
  */
 class InvoiceBuyer extends AppModel

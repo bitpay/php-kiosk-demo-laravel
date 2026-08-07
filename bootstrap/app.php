@@ -60,7 +60,8 @@ $app->singleton(
 );
 
 $app->singleton(
-    BitPayConfigurationInterface::class, static function (Application $application) {
+    BitPayConfigurationInterface::class,
+    static function (Application $application) {
         /** @var BitPayConfigurationFactoryInterface $factory */
         $factory = $application->make(BitPayConfigurationFactoryInterface::class);
 

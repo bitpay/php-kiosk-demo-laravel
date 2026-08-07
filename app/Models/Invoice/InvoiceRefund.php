@@ -12,9 +12,9 @@ use App\Models\AppModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property BelongsTo|null invoice_refund_info_id
- * @property string|null addresses_json
- * @property string|null address_request_pending
+ * @property BelongsTo|null $invoice_refund_info_id
+ * @property string|null $addresses_json
+ * @property string|null $address_request_pending
  */
 class InvoiceRefund extends AppModel
 {

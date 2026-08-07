@@ -11,13 +11,13 @@ namespace App\Models\Invoice;
 use App\Models\AppModel;
 
 /**
- * @property string|null name
- * @property string|null phone_number
- * @property string|null selected_wallet
- * @property string|null email_address
- * @property string|null selected_transaction_currency
- * @property string|null sms
- * @property string|null sms_verified
+ * @property string|null $name
+ * @property string|null $phone_number
+ * @property string|null $selected_wallet
+ * @property string|null $email_address
+ * @property string|null $selected_transaction_currency
+ * @property string|null $sms
+ * @property string|null $sms_verified
  */
 class InvoiceBuyerProvidedInfo extends AppModel
 {

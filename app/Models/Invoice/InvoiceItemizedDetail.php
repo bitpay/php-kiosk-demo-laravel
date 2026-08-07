@@ -12,10 +12,10 @@ use App\Models\AppModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property BelongsTo invoice_id
- * @property string|null amount
- * @property string|null description
- * @property bool is_fee
+ * @property BelongsTo $invoice
+ * @property string|null $amount
+ * @property string|null $description
+ * @property bool $is_fee
  */
 class InvoiceItemizedDetail extends AppModel
 {
