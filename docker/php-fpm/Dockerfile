@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.3.36-fpm-alpine
 
 ENV DEBIAN_FRONTEND noninteractive
 
