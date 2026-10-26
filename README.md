@@ -18,7 +18,7 @@ uses an embedded H2 database to make it easy to start. Feel free to use other RD
 ## Prerequisites
 
 - BitPay Account
-- PHP 8.2
+- PHP 8.2 or newer (the Docker image uses PHP 8.3)
 
 ## Configuration
 
